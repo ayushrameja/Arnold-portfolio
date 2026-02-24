@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "Lora", ui-serif, georgia, serif;
+  --font-editorial: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  --color-zinc-50: #FFFFE3; /* cream */
+  --color-zinc-100: #f9f9db;
+  --color-zinc-200: #ececce;
+  --color-zinc-300: #d4d4af;
+  --color-zinc-400: #b8b88e;
+  --color-zinc-500: #9c9c6f;
+  --color-zinc-600: #7e7e51;
+  --color-zinc-700: #626237;
+  --color-zinc-800: #46461f;
+  --color-zinc-900: #292911;
+  --color-zinc-950: #10100E; /* offBlack */
+}
+
+@layer base {
+  html,
+  body {
+    height: auto;
+  }
+}
+
+@keyframes scan-lines {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 40px 40px;
+  }
+}
+
+.bg-scan-lines {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    #181815 10px,
+    #181815 12px
+  );
+  background-size: 56px 56px;
+  animation: scan-lines 15s linear infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.bg-wavy-lines {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 15 Q 30 0, 60 15 T 120 15' fill='none' stroke='rgba(255, 255, 227, 0.03)' stroke-width='1' /%3E%3C/svg%3E");
+  background-size: 120px 30px;
+}
+
+@keyframes fall {
+  0% { transform: translateY(-20vh); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(120vh); opacity: 0; }
+}
+
+.falling-dot {
+  animation: fall linear infinite;
+}
+
+/* Modern Button Animations */
+.btn-modern {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition:
+    color 0.35s cubic-bezier(0.76, 0, 0.24, 1),
+    transform 0.35s cubic-bezier(0.76, 0, 0.24, 1),
+    box-shadow 0.35s cubic-bezier(0.76, 0, 0.24, 1),
+    border-color 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.btn-modern::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: -1;
+}
+.btn-modern:hover::before {
+  transform: translateY(-100%);
+}
+.btn-modern:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background-color: var(--color-zinc-50);
+  color: var(--color-zinc-950);
+  border-color: var(--color-zinc-50);
+}
+.btn-primary::before {
+  /* On hover we keep cream bg — the wipe still animates in from below */
+  background-color: var(--color-zinc-50);
+}
+.btn-primary:hover {
+  color: var(--color-zinc-950);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(255, 255, 227, 0.35), 0 4px 16px rgba(255, 255, 227, 0.15);
+  border-color: var(--color-zinc-50);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-zinc-50);
+  border: 1px solid rgba(255, 255, 227, 0.15);
+}
+.btn-secondary::before {
+  /* On hover: fill with cream */
+  background-color: var(--color-zinc-50);
+}
+.btn-secondary:hover {
+  color: var(--color-zinc-950);
+  border-color: var(--color-zinc-50);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(255, 255, 227, 0.25), 0 4px 16px rgba(255, 255, 227, 0.10);
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+:root {
+  color-scheme: light;
+  --storm-blur: 14px;
+  --storm-scale: 1.015;
+  --storm-rise: 14px;
+  --storm-duration: 1000ms;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+* {
+  scrollbar-color: rgba(161, 161, 170, 0.45) transparent;
+}
+
+.dark * {
+  scrollbar-color: rgba(63, 63, 70, 0.6) transparent;
+}
+
+html[data-storming="theme"] #app-shell {
+  animation: storm-blur var(--storm-duration) ease;
+  will-change: filter, transform;
+}
+
+html[data-storming="route"] #page-shell {
+  animation: storm-rise var(--storm-duration) ease;
+  will-change: opacity, transform;
+}
+
+html[data-storming="load"] #page-shell {
+  animation: storm-rise var(--storm-duration) ease;
+  will-change: opacity, transform;
+}
+
+@keyframes storm-blur {
+  0% {
+    filter: blur(0px);
+    transform: scale(1);
+  }
+  35% {
+    filter: blur(var(--storm-blur));
+    transform: scale(var(--storm-scale));
+  }
+  100% {
+    filter: blur(0px);
+    transform: scale(1);
+  }
+}
+
+@keyframes storm-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(var(--storm-rise));
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
