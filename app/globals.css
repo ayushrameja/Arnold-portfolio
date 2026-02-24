@@ -4,6 +4,11 @@
   --font-sans: "Inter", system-ui, sans-serif;
   --font-serif: "Lora", ui-serif, georgia, serif;
   --font-editorial: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-plaster: "Plaster", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-bg: #606695;
+  --color-brand-logo-top: #8C99FF;
+  --color-brand-logo-bottom: #FFFFFF;
 
   --color-zinc-50: #FFFFE3; /* cream */
   --color-zinc-100: #f9f9db;
@@ -44,6 +49,21 @@
   );
   background-size: 56px 56px;
   animation: scan-lines 15s linear infinite;
+}
+
+.text-logo-gradient {
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-brand-logo-top),
+    var(--color-brand-logo-bottom)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.font-plaster {
+  font-family: var(--font-plaster);
 }
 
 @keyframes gradient-shift {
@@ -100,35 +120,137 @@
 }
 
 .btn-primary {
-  background-color: var(--color-zinc-50);
-  color: var(--color-zinc-950);
-  border-color: var(--color-zinc-50);
+  background-color: #ffffff;
+  color: #606695;
+  border-color: #ffffff;
 }
 .btn-primary::before {
-  /* On hover we keep cream bg — the wipe still animates in from below */
-  background-color: var(--color-zinc-50);
+  background-color: #e7ecff;
 }
 .btn-primary:hover {
-  color: var(--color-zinc-950);
+  color: #4f5685;
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(255, 255, 227, 0.35), 0 4px 16px rgba(255, 255, 227, 0.15);
-  border-color: var(--color-zinc-50);
+  box-shadow: 0 16px 40px rgba(140, 153, 255, 0.35), 0 6px 20px rgba(22, 30, 73, 0.25);
+  border-color: #ffffff;
 }
 
 .btn-secondary {
   background-color: transparent;
-  color: var(--color-zinc-50);
-  border: 1px solid rgba(255, 255, 227, 0.15);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
 }
 .btn-secondary::before {
-  /* On hover: fill with cream */
-  background-color: var(--color-zinc-50);
+  background-color: #ffffff;
 }
 .btn-secondary:hover {
-  color: var(--color-zinc-950);
-  border-color: var(--color-zinc-50);
+  color: #606695;
+  border-color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(255, 255, 227, 0.25), 0 4px 16px rgba(255, 255, 227, 0.10);
+  box-shadow: 0 16px 38px rgba(140, 153, 255, 0.25), 0 6px 18px rgba(22, 30, 73, 0.2);
+}
+
+.hero-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+  isolation: isolate;
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #dce4ff;
+  transform: translateY(100%);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 0;
+}
+
+.hero-cta::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, 150%);
+  opacity: 0;
+  color: #4f5685;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 2;
+}
+
+.hero-cta-label {
+  position: relative;
+  z-index: 2;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-cta:hover,
+.hero-cta:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(20, 25, 57, 0.28);
+}
+
+.hero-cta:hover::before,
+.hero-cta:focus-visible::before {
+  transform: translateY(0);
+}
+
+.hero-cta:hover::after,
+.hero-cta:focus-visible::after {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}
+
+.hero-cta:hover .hero-cta-label,
+.hero-cta:focus-visible .hero-cta-label {
+  transform: translateY(-145%);
+  opacity: 0;
+}
+
+.hero-cta:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.65),
+    0 14px 30px rgba(20, 25, 57, 0.28);
+}
+
+.hero-cta:active {
+  transform: translateY(-1px) scale(0.985);
+}
+
+.hero-cta-secondary {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hero-cta-secondary::before {
+  background: #ffffff;
 }
 
 @keyframes pulse-glow {

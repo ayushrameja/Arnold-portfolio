@@ -36,7 +36,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@100..900&family=Lora:wght@400..700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Plaster&family=Space+Grotesk:wght@300..700&family=Inter:wght@100..900&family=Lora:wght@400..700&display=swap"
           rel="stylesheet"
         />
         <link
@@ -55,7 +55,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Arnold" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className="min-h-dvh overflow-x-hidden bg-zinc-950 font-sans text-zinc-50 antialiased selection:bg-mutedGold/30 selection:text-zinc-50">
+      <body className="min-h-dvh overflow-x-hidden bg-brand-bg font-sans text-white antialiased selection:bg-brand-logo-top/30 selection:text-white">
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

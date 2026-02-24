@@ -5,7 +5,7 @@ import ProjectsSection from "./_components/ProjectsSection";
 
 export default function Home() {
   return (
-    <main className="min-h-dvh pb-28">
+    <main className="min-h-dvh">
       <HeroSection />
 
       <div className="px-6">

@@ -4,193 +4,343 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLenis } from "lenis/react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  ArrowRight,
+  BarChart3,
+  Briefcase,
+  Code2,
+  Database,
+  Github,
+  Linkedin,
+  Mail,
+  MapPin,
+  Sparkles,
+  Workflow,
+} from "lucide-react";
 
-import { fadeInUp, staggerContainer } from "@/lib/animations";
+import { LINKS } from "@/constants/links";
 import { scrollToTarget } from "@/utils/scroll";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 28, filter: "blur(8px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+function useVancouverTime() {
+  const formatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Vancouver",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      }),
+    [],
+  );
+
+  const [time, setTime] = useState(() => formatter.format(new Date()));
+
+  useEffect(() => {
+    const interval = window.setInterval(
+      () => setTime(formatter.format(new Date())),
+      1000,
+    );
+    return () => window.clearInterval(interval);
+  }, [formatter]);
+
+  return time;
+}
+
+function HeroCard({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      variants={itemVariants}
+      className={`rounded-2xl border border-white/10 bg-white/5 ${
+        className ?? ""
+      }`}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function HeroSection() {
   const lenis = useLenis();
+  const localTime = useVancouverTime();
 
   return (
     <section
       id="about"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-24"
+      className="relative flex min-h-dvh items-center justify-center bg-brand-bg px-4 py-4 sm:px-6 sm:py-6 lg:px-8"
     >
-      {/* Deep Off-Black Background with Wavy Lines and Falling Dots */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-offBlack" />
-        <div className="absolute inset-0 bg-wavy-lines opacity-100" />
-
-        {/* Falling Bright Dots */}
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute h-1 w-1 rounded-full bg-cream falling-dot"
-            style={{
-              left: `${15 + i * 14}%`,
-              animationDuration: `${3 + (i % 3) * 1.5}s`,
-              animationDelay: `${i * 0.7}s`,
-            }}
-          />
-        ))}
-
-        {/* Deep, vast radial ambient glow to give depth to the wavy lines */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[1000px] w-[1000px] rounded-full bg-radial from-mutedGold/5 via-sageGreen/5 to-transparent blur-3xl opacity-70" />
-      </div>
-
       <motion.div
-        className="relative z-10 mx-auto w-full max-w-6xl"
-        variants={staggerContainer()}
+        variants={containerVariants}
         initial="hidden"
         animate="visible"
+        className="mx-auto grid w-full max-w-[1320px] grid-cols-1 gap-3 sm:gap-4 lg:h-[min(920px,calc(100dvh-2.5rem))] lg:grid-cols-12 lg:grid-rows-10 lg:gap-4"
       >
-        <div className="flex flex-col items-center text-center">
-          {/* Increased Size Profile Portrait */}
-          <motion.div variants={fadeInUp} className="group relative mb-8">
-            {/* Hover Glow */}
-            <div className="absolute -inset-4 rounded-full bg-linear-to-b from-mutedGold/40 to-sageGreen/30 opacity-0 blur-2xl transition duration-700 group-hover:opacity-100" />
-
-            <div className="relative h-48 w-48 overflow-hidden rounded-full shadow-2xl ring-1 ring-cream/20 sm:h-56 sm:w-56 lg:h-64 lg:w-64">
-              <Image
-                src="/assets/image/arnold.png"
-                alt="Arnold Kevin Desouza"
-                fill
-                priority
-                className="object-cover transition duration-1000 ease-in-out group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-mutedGold/5 mix-blend-overlay transition-opacity duration-500 group-hover:opacity-0" />
-            </div>
-          </motion.div>
-
-          {/* Editorial Typography */}
-          <motion.div variants={fadeInUp} className="w-full relative">
-            <h1 className="font-editorial text-5xl font-bold tracking-tight text-cream sm:text-7xl md:text-8xl lg:text-[7.5rem] leading-none">
-              Arnold Desouza
-            </h1>
-
-            <p className="mx-auto mt-8 max-w-2xl text-lg font-light leading-relaxed text-cream/70 sm:text-2xl">
-              Data Analyst & Engineer transforming complex data into singular,
-              elegant solutions based in{" "}
-              <span className="text-cream">Vancouver, BC</span>.
-            </p>
-
-            {/* Sharp, Complex Animated Action Buttons */}
-            <div className="mt-14 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-              <button
-                type="button"
-                onClick={() => scrollToTarget("projects", lenis as any)}
-                className="btn-modern btn-primary inline-flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-sm px-10 py-4 text-xs font-semibold tracking-[0.2em] sm:w-auto uppercase shadow-2xl"
-              >
-                Selected Work
-              </button>
-
-              <Link
-                href="/resume"
-                className="btn-modern btn-secondary inline-flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-sm px-10 py-4 text-xs font-semibold tracking-[0.2em] backdrop-blur-md sm:w-auto uppercase shadow-xl"
-              >
-                <span>Resume</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+        <HeroCard className="p-5 sm:p-6 lg:col-span-5 lg:row-span-2 lg:p-6">
+          <div className="grid h-full place-items-center">
+            <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center">
+              <div className="flex h-full items-center justify-center">
+                <Link
+                  href="/"
+                  className="font-plaster text-logo-gradient text-[2.5rem] leading-none sm:text-[3.5rem] lg:text-[3.75rem]"
                 >
-                  <path d="M7 17L17 7" />
-                  <path d="M7 7h10v10" />
-                </svg>
-              </Link>
+                  AKD
+                </Link>
+              </div>
+              <span
+                className="h-8 w-px bg-white/20 sm:h-10 lg:h-12"
+                aria-hidden="true"
+              />
+              <div className="flex h-full items-center justify-center">
+                <span className="text-[1.35rem] font-normal uppercase tracking-[0.08em] text-[#C1C9FF] sm:text-[1.25rem] lg:text-[1.5rem]">
+                  Portfolio
+                </span>
+              </div>
             </div>
-          </motion.div>
-        </div>
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: 0.5 }}
-        className="pointer-events-none absolute left-[5%] xl:left-[10%] top-[15%] hidden lg:block"
-      >
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="rounded-sm border border-zinc-800 bg-offBlack/90 p-5 font-mono text-[11px] text-zinc-500 shadow-2xl backdrop-blur-md"
-        >
-          <div className="flex gap-1.5 mb-3">
-            <div className="h-2 w-2 rounded-sm bg-red-500/50"></div>
-            <div className="h-2 w-2 rounded-sm bg-amber-500/50"></div>
-            <div className="h-2 w-2 rounded-sm bg-emerald-500/50"></div>
           </div>
-          <div className="space-y-1">
-            <p>
-              <span className="text-mutedGold">SELECT</span> skill, expertise
-              {" "}
-              <span className="text-mutedGold">FROM</span> arnold_portfolio
-            </p>
-            <p>
-              <span className="text-mutedGold">WHERE</span> tool{" "}
-              <span className="text-sageGreen">IN</span>{" "}
-              <span className="text-zinc-400">
-                (&apos;Python&apos;, &apos;SQL&apos;, &apos;Tableau&apos;)
-              </span>
-            </p>
-            <p className="text-zinc-600 mt-2">
-              {"//"} Record found. Status: Expert.
-            </p>
-          </div>
-        </motion.div>
-      </motion.div>
+        </HeroCard>
 
-      {/* Floating Metric - Bottom Right */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: 0.8 }}
-        className="pointer-events-none absolute right-[5%] xl:right-[10%] top-[70%] hidden lg:block"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-          className="flex flex-col gap-3 rounded-sm border border-zinc-800 bg-offBlack/90 p-4 shadow-2xl backdrop-blur-md min-w-[160px]"
-        >
-          <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.2em]">
-            ETL Pipelines Built
+        <HeroCard className="p-5 sm:p-6 lg:col-span-3 lg:row-span-2 lg:p-6">
+          <div className="grid h-full content-center gap-4">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                Local Time
+              </p>
+              <p className="mt-1 font-editorial text-3xl leading-none font-light text-white sm:text-[2.15rem]">
+                {localTime || "—:—"}
+              </p>
+            </div>
+
+            <div className="grid gap-1">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                Based In
+              </p>
+              <p className="text-sm font-medium text-white/90">Vancouver, BC</p>
+            </div>
           </div>
-          <div className="flex items-baseline gap-1">
-            <span className="font-editorial text-4xl text-cream">24</span>
-            <span className="text-sm font-sans text-sageGreen font-semibold">
-              sys
-            </span>
+        </HeroCard>
+
+        <HeroCard className="p-4 sm:p-5 lg:col-span-4 lg:row-span-2 lg:p-5">
+          <div className="grid h-full grid-rows-[auto_1fr] gap-4">
+            <h3 className="font-editorial text-2xl leading-none font-light text-white">
+              Socials
+            </h3>
+
+            <div className="grid h-full min-h-[84px] items-center">
+              <div className="grid h-full min-h-[72px] grid-cols-4 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
+                <a
+                  href={LINKS.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="LinkedIn"
+                  className="grid place-items-center text-white/80 transition hover:bg-white/[0.06] hover:text-white"
+                >
+                  <Linkedin size={30} strokeWidth={2} />
+                </a>
+                <a
+                  href={LINKS.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="GitHub"
+                  className="grid place-items-center border-l border-white/10 text-white/80 transition hover:bg-white/[0.06] hover:text-white"
+                >
+                  <Github size={30} strokeWidth={2} />
+                </a>
+                <a
+                  href="/resume"
+                  aria-label="Resume"
+                  className="grid place-items-center border-l border-white/10 text-white/80 transition hover:bg-white/[0.06] hover:text-white"
+                >
+                  <Briefcase size={30} strokeWidth={2} />
+                </a>
+                <a
+                  href={`mailto:${LINKS.email}`}
+                  aria-label="Email"
+                  className="grid place-items-center border-l border-white/10 text-white/80 transition hover:bg-white/[0.06] hover:text-white"
+                >
+                  <Mail size={30} strokeWidth={2} />
+                </a>
+              </div>
+            </div>
           </div>
-          <div className="h-1 w-full bg-zinc-800 rounded-sm overflow-hidden mt-1 relative">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 3, ease: "easeOut", delay: 1.5 }}
-              className="absolute top-0 left-0 h-full bg-linear-to-r from-mutedGold to-sageGreen"
+        </HeroCard>
+
+        <HeroCard className="relative overflow-hidden p-3 lg:col-span-3 lg:row-span-4">
+          <div className="relative h-full w-full overflow-hidden rounded-xl">
+            <Image
+              src="/assets/image/arnold.png"
+              alt="Arnold Kevin Desouza"
+              fill
+              priority
+              className="object-cover object-center transition-transform duration-1000 hover:scale-[1.02]"
             />
           </div>
-        </motion.div>
-      </motion.div>
+        </HeroCard>
 
-      {/* Minimal Scroll Indicator */}
-      <motion.div
-        variants={fadeInUp}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-50"
-      >
-        <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-cream">
-          Scroll
-        </span>
-        <div className="h-12 w-px bg-linear-to-b from-cream to-transparent opacity-30">
-        </div>
+        <HeroCard className="relative min-h-0 overflow-hidden p-5 sm:p-6 lg:col-span-6 lg:row-span-4 lg:p-6">
+          <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/[0.04] blur-[70px]" />
+
+          <div className="relative z-10 flex h-full min-h-0 flex-col justify-between gap-4">
+            <div>
+              <p className="text-[clamp(1.05rem,1.35vw,1.45rem)] leading-none text-white/95">
+                Hi, I&apos;m
+              </p>
+              <h1 className="mt-3 font-editorial text-[clamp(1.15rem,4vw,3.1rem)] leading-none tracking-[-0.03em] whitespace-nowrap text-white">
+                Arnold Kevin Desouza
+              </h1>
+              <p className="mt-5 max-w-[46ch] text-[clamp(1.02rem,1.25vw,1.4rem)] leading-[1.42] text-white/82">
+                I turn complex datasets into decision-ready systems: resilient
+                pipelines, useful dashboards, and automation that won&apos;t
+                become next quarter&apos;s cleanup job.
+              </p>
+            </div>
+
+            <p className="text-[clamp(0.95rem,1.15vw,1.35rem)] leading-tight tracking-tight text-white/95">
+              <span className="font-semibold">Python</span>
+              <span className="mx-2 text-white/55 sm:mx-3">•</span>
+              <span className="font-semibold">SQL</span>
+              <span className="mx-2 text-white/55 sm:mx-3">•</span>
+              <span className="font-semibold uppercase">Tableau</span>
+              <span className="mx-2 text-white/55 sm:mx-3">•</span>
+              <span className="font-semibold">Power BI</span>
+            </p>
+          </div>
+        </HeroCard>
+
+        <HeroCard className="min-h-0 p-4 sm:p-5 lg:col-span-3 lg:row-span-4 lg:p-5">
+          <div className="grid h-full min-h-0 grid-rows-[auto_1fr] gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#C1C9FF]/70">
+                Tech Arsenal
+              </p>
+              <h3 className="mt-1 text-2xl font-semibold leading-none text-white sm:text-3xl">
+                Stack I Use
+              </h3>
+            </div>
+
+            <div className="grid h-full min-h-0 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
+              <div className="grid h-full min-h-0 grid-cols-3 grid-rows-2">
+                {[
+                  { label: "SQL", icon: Database },
+                  { label: "Python", icon: Code2 },
+                  { label: "ETL", icon: Workflow },
+                  { label: "BI", icon: BarChart3 },
+                  { label: "DBT", icon: Sparkles },
+                  { label: "Maps", icon: MapPin },
+                ].map(({ label, icon: Icon }) => (
+                  <div
+                    key={label}
+                    className="flex min-h-0 flex-col items-center justify-center gap-2 border-white/10 px-2 py-3 text-white/85 [border-right:1px_solid_rgba(255,255,255,0.08)] [border-bottom:1px_solid_rgba(255,255,255,0.08)] [&:nth-child(3n)]:[border-right:none] [&:nth-last-child(-n+3)]:[border-bottom:none]"
+                  >
+                    <Icon size={34} strokeWidth={2} />
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/80">
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </HeroCard>
+
+        <HeroCard className="relative overflow-hidden p-5 sm:p-6 lg:col-span-7 lg:row-span-4 lg:p-6">
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-white/[0.03] to-transparent" />
+          <div className="relative z-10 flex h-full flex-col justify-between gap-5">
+            <div>
+              <p className="text-[clamp(0.95rem,1vw,1.1rem)] leading-none text-white/95">
+                Currently
+              </p>
+              <h3 className="mt-3 font-editorial text-[clamp(1.4rem,2.1vw,2.3rem)] leading-[1.02] tracking-tight text-white">
+                Building better reporting systems and cleaner analytics
+                handoffs.
+              </h3>
+              <p className="mt-4 text-[clamp(1.02rem,1.25vw,1.4rem)] leading-[1.45] text-white/78">
+                I focus on repeatable workflows, performance-minded
+                transformations, and dashboards that reduce back-and-forth
+                instead of creating more of it.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => scrollToTarget("projects", lenis as any, 80)}
+                data-text="Selected Work"
+                className="hero-cta h-11 cursor-pointer rounded-xl bg-white px-5 text-brand-bg"
+              >
+                <span className="hero-cta-label">Selected Work</span>
+              </button>
+              <Link
+                href="/resume"
+                data-text="Resume"
+                className="hero-cta hero-cta-secondary h-11 rounded-xl px-4 text-white"
+              >
+                <span className="hero-cta-label">Resume</span>
+              </Link>
+            </div>
+          </div>
+        </HeroCard>
+
+        <HeroCard className="p-5 sm:p-6 lg:col-span-5 lg:row-span-4 lg:p-6">
+          <div className="flex h-full flex-col justify-between gap-6">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-white/45">
+              <Mail size={14} />
+              <span>Let&apos;s Work Together</span>
+            </div>
+
+            <div>
+              <h3 className="font-editorial text-[clamp(1.4rem,2.1vw,2.3rem)] leading-[1.02] tracking-tight font-light text-white">
+                Open to full-time and contract roles.
+              </h3>
+              <p className="mt-3 text-[clamp(1.02rem,1.25vw,1.4rem)] leading-[1.45] text-white/60">
+                If you need cleaner analytics, reliable pipelines, or fewer
+                spreadsheet emergencies, I&apos;m interested.
+              </p>
+            </div>
+
+            <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-center">
+              <a
+                href={`mailto:${LINKS.email}`}
+                className="truncate rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/85 transition hover:bg-white/[0.06]"
+              >
+                {LINKS.email}
+              </a>
+              <button
+                type="button"
+                onClick={() => scrollToTarget("contact", lenis as any, 80)}
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.03] px-4 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-white/[0.06] active:scale-95"
+              >
+                Contact <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
+        </HeroCard>
       </motion.div>
     </section>
   );
