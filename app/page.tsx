@@ -5,7 +5,7 @@ import ProjectsSection from "./_components/ProjectsSection";
 
 export default function Home() {
   return (
-    <main className="min-h-dvh">
+    <main className="relative isolate min-h-dvh overflow-x-clip bg-[#6C73A4]">
       <HeroSection />
 
       <div className="px-6">

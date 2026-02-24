@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { Suspense, useCallback, useEffect, useState } from "react";
 
@@ -15,12 +14,7 @@ export default function ClientLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   const [showLoader, setShowLoader] = useState(true);
-
-  useEffect(() => {
-    setShowLoader(true);
-  }, [pathname]);
 
   const handleLoaderComplete = useCallback(() => {
     setShowLoader(false);
@@ -60,10 +54,7 @@ export default function ClientLayout({
         <StormTransition />
         <AnimatePresence initial={false}>
           {showLoader ? (
-            <InitialLoader
-              key={pathname}
-              onComplete={handleLoaderComplete}
-            />
+            <InitialLoader onComplete={handleLoaderComplete} />
           ) : null}
         </AnimatePresence>
       </div>

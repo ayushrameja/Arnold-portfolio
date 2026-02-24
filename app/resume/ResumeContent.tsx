@@ -1,187 +1,260 @@
 "use client";
 
+import type { ReactNode } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Briefcase,
+  Download,
+  FileText,
+  MapPin,
+  Sparkles,
+} from "lucide-react";
+
 import { RESUME } from "@/constants/links";
 
-export default function ResumeContent() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.04,
     },
-  };
+  },
+};
 
-  const iframeVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", delay: 0.2 },
-    },
-  };
+const itemVariants = {
+  hidden: { opacity: 0, y: 14, filter: "blur(6px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
-  const sidebarVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.7, ease: "easeOut", delay: 0.15 },
-    },
-  };
-
+function ResumeCard({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
     <motion.div
-      className="relative min-h-dvh overflow-hidden bg-offBlack px-4 pb-28 pt-12 text-cream sm:px-6 lg:h-dvh lg:overflow-hidden lg:px-8 lg:pb-28 lg:pt-8"
+      variants={itemVariants}
+      className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md ${className ?? ""}`}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export default function ResumeContent() {
+  return (
+    <motion.section
       initial="hidden"
       animate="visible"
       variants={containerVariants}
+      className="relative h-dvh overflow-hidden bg-brand-bg p-3 text-white sm:p-4 lg:p-5"
     >
-      {/* Background aesthetics — matches rest of site */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-wavy-lines opacity-100" />
-        <div className="absolute right-0 top-0 h-[700px] w-[700px] rounded-full bg-radial from-mutedGold/5 to-transparent blur-3xl opacity-50" />
-        <div className="absolute bottom-0 left-0 h-[500px] w-[500px] -translate-x-1/3 translate-y-1/3 rounded-full bg-radial from-sageGreen/5 to-transparent blur-3xl opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#6a73ac] via-brand-bg to-[#4a5274]" />
+        <div className="absolute inset-0 bg-wavy-lines opacity-35" />
+        <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:22px_22px]" />
+        <div className="absolute -left-16 top-20 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#C1C9FF]/15 blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-white/8 blur-3xl" />
       </div>
 
-      {/* Falling Dots — same as Hero */}
-      {[...Array(5)].map((_, i) => (
+      {[...Array(4)].map((_, i) => (
         <div
           key={i}
-          className="pointer-events-none absolute h-1 w-1 rounded-full bg-cream falling-dot"
+          className="falling-dot pointer-events-none absolute h-1 w-1 rounded-full bg-white/80"
           style={{
-            left: `${10 + i * 18}%`,
-            animationDuration: `${3 + (i % 3) * 1.5}s`,
-            animationDelay: `${i * 0.9}s`,
+            left: `${15 + i * 22}%`,
+            animationDuration: `${3.4 + i * 0.8}s`,
+            animationDelay: `${i * 0.7}s`,
           }}
         />
       ))}
 
-      <div className="relative z-10 mx-auto max-w-[1200px] lg:h-full">
-        <div className="flex flex-col gap-10 lg:grid lg:h-full lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-8">
-          {/* ── Left Sidebar ── */}
-          <motion.div
-            variants={sidebarVariants}
-            className="flex flex-col gap-8 lg:justify-between lg:py-4"
-          >
-            <div className="flex flex-col gap-8">
-              {/* Label */}
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
-                  Career Snapshot
-                </p>
-                <h1 className="mt-4 font-editorial text-6xl font-bold tracking-tight text-cream sm:text-7xl leading-none">
+      <div className="relative z-10 mx-auto h-full w-full max-w-[1440px]">
+        <motion.div
+          variants={containerVariants}
+          className="grid h-full min-h-0 gap-3 [grid-template-rows:auto_minmax(0,1fr)] lg:grid-cols-[360px_minmax(0,1fr)] lg:grid-rows-1 lg:gap-4"
+        >
+          <div className="grid min-h-0 gap-3 lg:grid-rows-[auto_auto_minmax(0,1fr)] lg:gap-4">
+            <ResumeCard className="relative overflow-hidden p-4 sm:p-5">
+              <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-3xl" />
+
+              <div className="relative z-10">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/80 transition hover:bg-white/[0.08]"
+                >
+                  <ArrowLeft size={14} />
+                  Back to Portfolio
+                </Link>
+
+                <div className="mt-4 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/65">
+                  <FileText size={12} className="text-[#C1C9FF]" />
+                  Resume Route
+                </div>
+
+                <h1 className="mt-4 font-editorial text-3xl leading-none tracking-tight text-white sm:text-4xl">
                   Resume
                 </h1>
-                <p className="mt-5 max-w-xs text-sm font-light leading-relaxed text-cream/70 md:text-base">
-                  A chronological overview of my work history, skills, and
-                  technical experience.
+                <p className="mt-3 text-sm leading-relaxed text-white/72">
+                  Fixed page layout on purpose: the resume viewer scrolls, the page
+                  doesn&apos;t. Less ambiguity, fewer confused scroll wheels.
                 </p>
-              </div>
 
-              {/* Download Button */}
-              <a
-                href={RESUME.downloadUrl}
-                download
-                className="btn-modern btn-primary group inline-flex w-fit cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-sm px-8 py-4 text-[10px] font-semibold uppercase tracking-[0.2em] shadow-2xl"
-              >
-                <span>Download PDF</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-y-0.5"
-                >
-                  <path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
-                  <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
-                </svg>
-              </a>
-
-              {/* Info Cards */}
-              <div className="grid gap-3">
-                {[
-                  { label: "Role", value: "Data Analyst & Engineer" },
-                  { label: "Location", value: "Vancouver, BC" },
-                  { label: "Status", value: "Open to Opportunities" },
-                ].map(({ label, value }) => (
-                  <div
-                    key={label}
-                    className="flex items-center justify-between rounded-sm border border-zinc-800 bg-zinc-900/40 px-4 py-3 backdrop-blur-sm"
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <a
+                    href={RESUME.downloadUrl}
+                    download
+                    data-text="Download PDF"
+                    className="hero-cta h-10 rounded-xl bg-white px-4 text-brand-bg"
                   >
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
-                      {label}
+                    <span className="hero-cta-label inline-flex items-center gap-2">
+                      Download
+                      <Download size={13} />
                     </span>
-                    <span className="text-xs font-medium text-cream/80">
-                      {value}
+                  </a>
+                  <a
+                    href={RESUME.previewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-text="Open Preview"
+                    className="hero-cta hero-cta-secondary h-10 rounded-xl px-4 text-white"
+                  >
+                    <span className="hero-cta-label inline-flex items-center gap-2">
+                      Preview
+                      <ArrowUpRight size={13} />
                     </span>
-                  </div>
-                ))}
+                  </a>
+                </div>
               </div>
-            </div>
+            </ResumeCard>
 
-            {/* Floating SQL snippet — mirrors Hero floating widget */}
-            <div className="hidden rounded-sm border border-zinc-800 bg-offBlack/90 p-5 font-mono text-[11px] text-zinc-500 shadow-2xl backdrop-blur-md lg:block">
-              <div className="mb-3 flex gap-1.5">
-                <div className="h-2 w-2 rounded-sm bg-red-500/50" />
-                <div className="h-2 w-2 rounded-sm bg-amber-500/50" />
-                <div className="h-2 w-2 rounded-sm bg-emerald-500/50" />
-              </div>
-              <div className="space-y-1">
-                <p>
-                  <span className="text-mutedGold">SELECT</span>{" "}
-                  * FROM career_history
-                </p>
-                <p>
-                  <span className="text-mutedGold">WHERE</span> candidate{" "}
-                  <span className="text-sageGreen">=</span>
-                  <span className="text-zinc-400">
-                    &apos;Arnold Desouza&apos;
-                  </span>
-                </p>
-                <p>
-                  <span className="text-mutedGold">ORDER BY</span> year{" "}
-                  <span className="text-sageGreen">DESC</span>
-                </p>
-                <p className="mt-2 text-zinc-600">
-                  {"// "}Results:{" "}
-                  {new Date().getFullYear() - 2021}+ years of impact.
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* ── Resume iframe Panel ── */}
-          <motion.div
-            variants={iframeVariants}
-            className="group relative overflow-hidden rounded-sm border border-zinc-800 bg-offBlack/80 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:border-mutedGold/30 lg:h-full"
-          >
-            {/* Hover glow */}
-            <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100">
-              <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-mutedGold/8 blur-3xl" />
-            </div>
-
-            {/* Fake browser chrome bar */}
-            <div className="relative flex h-10 items-center justify-between border-b border-zinc-800 bg-zinc-900/70 px-4 backdrop-blur-sm">
-              <div className="flex items-center gap-1.5">
-                <div className="h-2.5 w-2.5 rounded-sm bg-red-500/50" />
-                <div className="h-2.5 w-2.5 rounded-sm bg-amber-500/50" />
-                <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500/50" />
-              </div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-600">
-                Arnold Kevin Desouza — Résumé
+            <ResumeCard className="p-4 sm:p-5">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45">
+                Snapshot
               </p>
-              <div className="w-16" />
+
+              <div className="mt-3 grid gap-3">
+                <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
+                  <div className="flex items-center gap-2 text-sm text-white/85">
+                    <Briefcase size={15} className="text-[#C1C9FF]" />
+                    Data Analyst & Engineer
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
+                  <div className="flex items-center gap-2 text-sm text-white/85">
+                    <MapPin size={15} className="text-[#C1C9FF]" />
+                    Vancouver, BC
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
+                  <div className="inline-flex items-center gap-2 text-sm text-white/85">
+                    <Sparkles size={15} className="text-[#C1C9FF]" />
+                    Open to opportunities
+                  </div>
+                </div>
+              </div>
+            </ResumeCard>
+
+            <ResumeCard className="hidden min-h-0 flex-col justify-between p-4 lg:flex">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45">
+                  Notes
+                </p>
+
+                <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 font-mono text-[11px] leading-relaxed text-white/70">
+                  <div className="mb-3 flex items-center gap-1.5">
+                    <div className="h-2 w-2 rounded-full bg-red-300/60" />
+                    <div className="h-2 w-2 rounded-full bg-amber-200/60" />
+                    <div className="h-2 w-2 rounded-full bg-emerald-200/60" />
+                  </div>
+                  <p>
+                    <span className="text-[#C1C9FF]">SELECT</span> * FROM experience
+                  </p>
+                  <p>
+                    <span className="text-[#C1C9FF]">WHERE</span> focus IN (
+                    <span className="text-white/90">&apos;analytics&apos;</span>,
+                    <span className="text-white/90"> &apos;engineering&apos;</span>)
+                  </p>
+                  <p>
+                    <span className="text-[#C1C9FF]">ORDER BY</span> impact DESC;
+                  </p>
+                  <p className="mt-3 text-white/50">
+                    {"// "}Legacy systems remain undefeated, but we try.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.04] p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">
+                  Viewer Tip
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-white/72">
+                  Scroll inside the resume panel on the right. The page itself is intentionally locked.
+                </p>
+              </div>
+            </ResumeCard>
+          </div>
+
+          <ResumeCard className="group relative min-h-0 overflow-hidden">
+            <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+              <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-3xl" />
+              <div className="absolute bottom-0 left-1/3 h-40 w-40 rounded-full bg-[#C1C9FF]/12 blur-3xl" />
             </div>
 
-            <iframe
-              src={RESUME.previewUrl}
-              title="Arnold Kevin Desouza's Resume"
-              className="mt-0 h-[72dvh] w-full lg:h-[calc(100%-2.5rem)]"
-              loading="lazy"
-            />
-          </motion.div>
-        </div>
+            <div className="relative grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)]">
+              <div className="border-b border-white/10 bg-white/[0.03] px-4 py-3 sm:px-5">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-full bg-red-300/60" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-amber-200/60" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-200/60" />
+                  </div>
+
+                  <p className="truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
+                    Arnold Kevin Desouza - Resume Preview
+                  </p>
+
+                  <a
+                    href={RESUME.previewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.03] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/70 transition hover:bg-white/[0.08]"
+                  >
+                    Open
+                    <ArrowUpRight size={12} />
+                  </a>
+                </div>
+              </div>
+
+              <div className="min-h-0 p-2 sm:p-3">
+                <div className="h-full overflow-hidden rounded-xl border border-white/10 bg-white/[0.02]">
+                  <iframe
+                    src={RESUME.previewUrl}
+                    title="Arnold Kevin Desouza Resume"
+                    loading="lazy"
+                    className="h-full w-full bg-white"
+                  />
+                </div>
+              </div>
+            </div>
+          </ResumeCard>
+        </motion.div>
       </div>
-    </motion.div>
+    </motion.section>
   );
 }

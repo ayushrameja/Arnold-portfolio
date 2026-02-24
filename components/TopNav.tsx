@@ -26,10 +26,9 @@ function useVancouverTime() {
     [],
   );
 
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState(() => formatter.format(new Date()));
 
   useEffect(() => {
-    setTime(formatter.format(new Date()));
     const interval = window.setInterval(() => setTime(formatter.format(new Date())), 1000);
     return () => window.clearInterval(interval);
   }, [formatter]);
@@ -42,19 +41,17 @@ export default function TopNav() {
   const router = useRouter();
   const lenis = useLenis();
   const localTime = useVancouverTime();
+  const isResumeRoute = pathname.startsWith("/resume");
   const isHomeRoute = pathname === "/";
-  
-  const [isVisible, setIsVisible] = useState(!isHomeRoute);
+
+  const [homeNavVisible, setHomeNavVisible] = useState(false);
 
   useEffect(() => {
-    if (!isHomeRoute) {
-      setIsVisible(true);
-      return;
-    }
+    if (!isHomeRoute) return;
 
     const handleScroll = () => {
       // Show navbar when scrolled past Hero
-      setIsVisible(window.scrollY > window.innerHeight * 0.85);
+      setHomeNavVisible(window.scrollY > window.innerHeight * 0.85);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -70,6 +67,12 @@ export default function TopNav() {
     }
     router.push(`/#${id}`);
   };
+
+  if (isResumeRoute) {
+    return null;
+  }
+
+  const isVisible = !isHomeRoute || homeNavVisible;
 
   return (
     <AnimatePresence>

@@ -94,7 +94,7 @@ export default function HeroSection() {
   return (
     <section
       id="about"
-      className="relative flex min-h-dvh items-center justify-center bg-brand-bg px-4 py-4 sm:px-6 sm:py-6 lg:px-8"
+      className="relative flex min-h-dvh items-center justify-center bg-transparent px-4 py-4 sm:px-6 sm:py-6 lg:px-8"
     >
       <motion.div
         variants={containerVariants}
