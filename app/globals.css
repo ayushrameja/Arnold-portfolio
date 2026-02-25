@@ -149,6 +149,14 @@
   box-shadow: 0 16px 38px rgba(140, 153, 255, 0.25), 0 6px 18px rgba(22, 30, 73, 0.2);
 }
 
+.hero-name-card {
+  background-image: radial-gradient(
+    ellipse at 30% 20%,
+    rgba(140, 153, 255, 0.08),
+    transparent 70%
+  );
+}
+
 .hero-cta {
   position: relative;
   display: inline-flex;
