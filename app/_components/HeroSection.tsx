@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import ThemeToggle from "@/components/ThemeToggle";
@@ -105,63 +105,35 @@ function ThemeSvgAsset({
   );
 }
 
-function socialRowRadius(index: number, total: number) {
-  if (index === 0) {
-    return "md:rounded-none md:rounded-tl-[20px] md:rounded-tr-[20px]";
-  }
 
-  if (index === total - 1) {
-    return "md:rounded-none md:rounded-bl-[20px] md:rounded-br-[20px]";
-  }
-
-  return "md:rounded-none";
-}
-
-function stackTileRadius(index: number) {
-  if (index === 0) {
-    return "md:rounded-none md:rounded-tl-[20px]";
-  }
-
-  if (index === 2) {
-    return "md:rounded-none md:rounded-tr-[20px]";
-  }
-
-  if (index === 3) {
-    return "md:rounded-none md:rounded-bl-[20px]";
-  }
-
-  if (index === 5) {
-    return "md:rounded-none md:rounded-br-[20px]";
-  }
-
-  return "md:rounded-none";
-}
 
 function HeroTopBar({ timeLabel }: { timeLabel: string }) {
   return (
-    <div className="grid items-end gap-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-5">
-      <div className="order-2 flex flex-wrap items-center gap-3 sm:order-1 sm:gap-4">
-        <p className="inline-flex items-center gap-2 text-sm font-medium tracking-tight text-[var(--text-primary)] sm:text-base md:text-lg lg:text-[clamp(1rem,1.6vw,1.5625rem)]">
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-5">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="ui-surface-card ui-card-shadow inline-flex h-9 items-center justify-center gap-2 rounded-full border px-3 sm:h-11 sm:gap-2.5 sm:px-5">
           <span
             aria-hidden="true"
-            className="size-2 rounded-full [background-color:var(--text-primary)] opacity-80 animate-status-pulse"
+            className="size-2 shrink-0 rounded-full bg-emerald-500 animate-status-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"
           />
-          Open for Work
-        </p>
+          <span className="hidden text-sm font-medium tracking-tight text-[var(--text-primary)] sm:inline sm:text-base">
+            Open to work
+          </span>
+        </div>
         <ThemeToggle />
       </div>
 
-      <div className="order-1 text-center sm:order-2">
-        <p className="font-display text-[clamp(1.75rem,4vw,3.125rem)] leading-none tracking-[0.02em] text-[var(--text-primary)]">
+      <div className="text-center">
+        <p className="font-logo text-[clamp(1.75rem,4vw,3.125rem)] leading-none tracking-[0.02em] text-[var(--text-primary)]">
           AKD
         </p>
       </div>
 
-      <div className="order-3 text-left sm:text-right">
-        <p suppressHydrationWarning className="text-sm tracking-tight text-[var(--text-muted)] sm:text-base lg:text-[clamp(1rem,1.6vw,1.5625rem)]">
+      <div className="text-right">
+        <p suppressHydrationWarning className="text-xs tracking-tight text-[var(--text-muted)] sm:text-base lg:text-[clamp(1rem,1.6vw,1.5625rem)]">
           {timeLabel}
         </p>
-        <p className="text-base font-semibold tracking-tight text-[var(--text-primary)] sm:text-lg md:text-xl lg:text-[clamp(1rem,1.6vw,1.5625rem)]">
+        <p className="text-sm font-semibold tracking-tight text-[var(--text-primary)] sm:text-lg md:text-xl lg:text-[clamp(1rem,1.6vw,1.5625rem)]">
           Vancouver, BC
         </p>
       </div>
@@ -172,16 +144,21 @@ function HeroTopBar({ timeLabel }: { timeLabel: string }) {
 function Card({
   className,
   children,
+  as: Component = "div",
+  ...props
 }: {
   className?: string;
   children: React.ReactNode;
+  as?: React.ElementType;
+  [key: string]: any;
 }) {
   return (
-    <div
+    <Component
       className={`ui-surface-card ui-card-shadow rounded-[18px] border p-4 sm:rounded-[20px] sm:p-5 md:p-4 ${className ?? ""}`}
+      {...props}
     >
       {children}
-    </div>
+    </Component>
   );
 }
 
@@ -221,7 +198,7 @@ export default function HeroSection() {
   return (
     <section
       id="about"
-      className="ui-surface-page relative isolate min-h-dvh overflow-x-clip text-[var(--text-primary)]"
+      className="ui-surface-page bg-dot-pattern relative isolate min-h-dvh overflow-x-clip text-[var(--text-primary)]"
       aria-label="Hero"
     >
       <div className="mx-auto grid min-h-dvh w-full max-w-[1280px] grid-rows-[auto_1fr] px-4 pb-4 pt-2 sm:px-6 sm:pb-5 sm:pt-3 md:px-10 md:pb-6 md:pt-4 xl:px-[52px]">
@@ -252,7 +229,7 @@ export default function HeroSection() {
                   <h1 className="mt-1 text-2xl font-semibold leading-[1.05] tracking-tight [text-wrap:balance] sm:text-3xl md:text-[clamp(1.25rem,2.2vw,1.875rem)]">
                     Arnold Kevin Desouza
                   </h1>
-                  <p className="mt-[clamp(0.75rem,1.2vw,1.25rem)] max-w-[29rem] text-sm leading-snug text-[var(--text-primary)] [text-wrap:pretty] sm:text-base md:text-[clamp(0.875rem,1.4vw,1.25rem)] md:leading-[1.28]">
+                  <p className="mt-[clamp(1.5rem,3vw,2.5rem)] max-w-[29rem] text-sm leading-snug text-[var(--text-primary)] [text-wrap:pretty] sm:text-base md:text-[clamp(0.875rem,1.4vw,1.25rem)] md:leading-[1.28]">
                     I turn complex datasets into decision-ready systems: resilient
                     pipelines, useful dashboards, and automation that won&apos;t become
                     next quarter&apos;s cleanup job.
@@ -262,32 +239,58 @@ export default function HeroSection() {
             </Card>
 
             {/* Box 4 – Social links (row 1, col 2) */}
-            <Card className="md:rounded-none md:rounded-tr-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2.5vw,33px)] xl:py-[clamp(20px,2.5vw,40px)]">
-              <div className="grid h-full place-content-center gap-[5px]">
-                {SOCIAL_LINKS.map(({ href, label, icon, external }, index) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target={external ? "_blank" : undefined}
-                    rel={external ? "noreferrer noopener" : undefined}
-                    className={`ui-surface-inset group flex min-h-[clamp(3rem,5.5vw,4.35rem)] items-center justify-between gap-45 rounded-[0.9rem] px-4 py-2 transition hover:translate-y-[-1px] hover:opacity-95 sm:rounded-[1rem] sm:px-5 xl:px-[14px] ${socialRowRadius(index, SOCIAL_LINKS.length)}`}
-                    aria-label={label}
-                  >
-                    <span className="inline-flex items-center gap-3">
-                      <ThemeSvgAsset icon={icon} className="h-6 w-6 sm:h-7 sm:w-7 xl:h-[35px] xl:w-[35px]" />
-                    </span>
-                    <span className="text-base tracking-tight text-[var(--text-subtle)] transition group-hover:text-[var(--text-primary)] sm:text-lg xl:text-[22.5px]">
-                      {label}
-                    </span>
-                  </a>
-                ))}
+            <Card className="flex flex-col justify-center md:rounded-none md:rounded-tr-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2.5vw,33px)]">
+              <div className="flex w-full flex-col gap-1 sm:gap-1">
+                {SOCIAL_LINKS.map(({ href, label, icon, external }, index) => {
+                  let radiusClass = "";
+                  if (index === 0) {
+                    radiusClass = "rounded-t-[20px]";
+                  } else if (index === SOCIAL_LINKS.length - 1) {
+                    radiusClass = "rounded-b-[20px]";
+                  }
+
+                  return (
+                    <a
+                      key={label}
+                      href={href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noreferrer noopener" : undefined}
+                      className={`ui-surface-inset group relative block w-full cursor-pointer overflow-hidden transition-all duration-300 hover:z-10 hover:-translate-y-[2px] hover:bg-[var(--surface-page)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:ring-1 hover:ring-[var(--border-subtle)] dark:hover:shadow-[0_4px_12px_rgba(255,255,255,0.02)] ${radiusClass}`}
+                      aria-label={label}
+                    >
+                      <div className="relative z-10 flex w-full items-center justify-between px-5 py-3 sm:px-6 sm:py-3.5 transition-opacity duration-300 group-hover:opacity-0">
+                        <div className="flex items-center gap-4 sm:gap-5">
+                          <div className="flex size-[20px] shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 sm:size-[24px]">
+                            <ThemeSvgAsset icon={icon} className="size-full object-contain opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+                          </div>
+                          <span className="text-[14px] font-medium tracking-tight text-[var(--text-primary)] sm:text-[15px] xl:text-[16px]">
+                            {label}
+                          </span>
+                        </div>
+                        <ArrowRight className="mr-1 size-4 text-[var(--text-subtle)] opacity-0 -translate-x-2 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[var(--text-primary)]" />
+                      </div>
+
+                      {/* Google-Style Hover Overlay */}
+                      <div className="absolute inset-0 z-20 flex bg-[var(--text-primary)] text-[var(--surface-page)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <div className="flex shrink-0 items-center bg-[var(--text-primary)] pl-5 pr-2 sm:pl-6 sm:pr-4 z-10 h-full">
+                          <ArrowUpRight className="size-4 sm:size-5" />
+                        </div>
+                        <div className="flex-1 flex items-center h-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                          <div className="animate-marquee-ltr flex w-max gap-4 font-display text-lg tracking-widest text-[var(--surface-page)] pt-0.5">
+                            {Array.from({ length: 12 }).map((_, i) => <span key={i} className="whitespace-nowrap uppercase">{label}</span>)}
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  );
+                })}
               </div>
             </Card>
 
             {/* Box 2-3 – Experience & Resume (row 2, col 1) */}
             {/* #region agent log */}<div ref={box2Ref} className="grid gap-[clamp(5px,0.8vw,10px)] md:grid-cols-2">{/* #endregion */}
-              <Card className="md:rounded-none md:rounded-bl-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
-                <div className="flex h-full flex-col">
+              <Card as="a" href={LINKS.github} target="_blank" rel="noreferrer noopener" className="group relative block cursor-pointer overflow-hidden md:rounded-none md:rounded-bl-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+                <div className="flex h-full flex-col relative z-10 transition-opacity duration-300 group-hover:opacity-0">
                   <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
                     Experience
                   </h2>
@@ -296,19 +299,26 @@ export default function HeroSection() {
                     <strong>fast transformations</strong>, and low-friction{" "}
                     <strong>dashboards</strong>.
                   </p>
-                  <a
-                    href={LINKS.github}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="mt-auto inline-flex w-fit items-center gap-1 text-base font-medium underline underline-offset-4 transition hover:opacity-80 sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)]"
-                  >
+                  <div className="mt-auto inline-flex w-fit items-center gap-1 text-base font-medium underline underline-offset-4 transition sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)]">
                     See work <ArrowRight className="size-4" aria-hidden="true" />
-                  </a>
+                  </div>
+                </div>
+
+                {/* Hover overlay */}
+                <div className="absolute inset-0 z-20 flex flex-col justify-between bg-[var(--text-primary)] text-[var(--surface-page)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="p-4 sm:p-5 xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+                    <ArrowUpRight className="size-6 sm:size-8" />
+                  </div>
+                  <div className="flex items-center overflow-hidden pb-4 sm:pb-5 xl:pb-[clamp(14px,1.8vw,24px)] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                    <div className="animate-marquee-ltr flex w-max gap-6 px-4 font-display text-4xl sm:text-5xl uppercase tracking-widest text-[var(--surface-page)]">
+                      {Array.from({ length: 8 }).map((_, i) => <span key={i}>EXPERIENCE</span>)}
+                    </div>
+                  </div>
                 </div>
               </Card>
 
-              <Card className="md:rounded-none md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
-                <div className="flex h-full flex-col">
+              <Card as={Link} href="/resume" className="group relative block cursor-pointer overflow-hidden md:rounded-none md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+                <div className="flex h-full flex-col relative z-10 transition-opacity duration-300 group-hover:opacity-0">
                   <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
                     Resume
                   </h2>
@@ -316,31 +326,60 @@ export default function HeroSection() {
                     A quick <strong>overview of what I&apos;ve worked on</strong> and{" "}
                     <strong>what I&apos;m good at</strong>.
                   </p>
-                  <Link
-                    href="/resume"
-                    className="mt-auto inline-flex w-fit items-center gap-1 text-base font-medium underline underline-offset-4 transition hover:opacity-80 sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)]"
-                  >
+                  <div className="mt-auto inline-flex w-fit items-center gap-1 text-base font-medium underline underline-offset-4 transition sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)]">
                     View Resume <ArrowRight className="size-4" aria-hidden="true" />
-                  </Link>
+                  </div>
+                </div>
+
+                {/* Hover overlay */}
+                <div className="absolute inset-0 z-20 flex flex-col justify-between bg-[var(--text-primary)] text-[var(--surface-page)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="p-4 sm:p-5 xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+                    <ArrowUpRight className="size-6 sm:size-8" />
+                  </div>
+                  <div className="flex items-center overflow-hidden pb-4 sm:pb-5 xl:pb-[clamp(14px,1.8vw,24px)] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                    <div className="animate-marquee-ltr flex w-max gap-6 px-4 font-display text-4xl sm:text-5xl uppercase tracking-widest text-[var(--surface-page)]">
+                      {Array.from({ length: 8 }).map((_, i) => <span key={i}>RESUME</span>)}
+                    </div>
+                  </div>
                 </div>
               </Card>
             </div>
 
             {/* Box 5 – Tech stack (row 2, col 2) */}
-            {/* #region agent log */}<div ref={box5Ref}>{/* #endregion */}
-            <Card className="md:rounded-none md:rounded-br-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2.2vw,30px)] xl:pb-[clamp(20px,2.8vw,38px)] xl:pt-[clamp(20px,2.8vw,39px)]">
-              <div className="grid h-full grid-cols-3 place-content-center gap-[5px]">
-                {STACK_ITEMS.map(({ label, icon }, index) => (
-                  <div
-                    key={label}
-                    className={`ui-surface-inset flex min-h-[clamp(4rem,8vw,6.8rem)] flex-col items-center justify-center rounded-[0.9rem] px-3 py-2 text-center sm:rounded-[1rem] ${stackTileRadius(index)}`}
-                  >
-                    <ThemeSvgAsset icon={icon} className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem] xl:h-[32px] xl:w-[32px]" />
-                    <p className="mt-2 text-xs font-semibold tracking-tight text-[var(--text-subtle)] sm:text-sm xl:text-[15px]">
-                      {label}
-                    </p>
-                  </div>
-                ))}
+            {/* #region agent log */}<div ref={box5Ref} className="h-full">{/* #endregion */}
+            <Card className="md:rounded-none md:rounded-br-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+              <div className="flex h-full flex-col">
+                <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
+                  Core Stack
+                </h2>
+                <div className="mt-[clamp(1rem,1.5vw,2rem)] grid w-full grid-cols-2 gap-[2px]">
+                  {STACK_ITEMS.map(({ label, icon }, index) => {
+                    let radiusClass = "";
+                    if (index === 0) {
+                      radiusClass = "rounded-tl-[20px]";
+                    } else if (index === 1) {
+                      radiusClass = "rounded-tr-[20px]";
+                    } else if (index === STACK_ITEMS.length - 2) {
+                      radiusClass = "rounded-bl-[20px]";
+                    } else if (index === STACK_ITEMS.length - 1) {
+                      radiusClass = "rounded-br-[20px]";
+                    }
+
+                    return (
+                      <div
+                        key={label}
+                        className={`ui-surface-inset flex cursor-default items-center gap-2.5 sm:gap-3 px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-[var(--surface-page)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:ring-1 hover:ring-[var(--border-subtle)] dark:hover:shadow-[0_2px_8px_rgba(255,255,255,0.03)] transition-all duration-300 hover:scale-[1.02] hover:z-10 ${radiusClass}`}
+                      >
+                        <div className="flex size-[1.1rem] shrink-0 items-center justify-center sm:size-[1.2rem]">
+                          <ThemeSvgAsset icon={icon} className="size-full object-contain opacity-85" />
+                        </div>
+                        <span className="min-w-0 truncate text-[13px] font-medium tracking-wide text-[var(--text-primary)] sm:text-[14px]">
+                          {label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </Card>
             {/* #region agent log */}</div>{/* #endregion */}

@@ -36,7 +36,7 @@ export const Logo = ({ className = "w-8 h-8" }: { className?: string }) => {
 
 export const LogoText = ({ className = "" }: { className?: string }) => {
   return (
-    <div className={`font-editorial font-bold tracking-tighter ${className}`}>
+    <div className={`font-logo ${className}`}>
       BIKRAM
     </div>
   );

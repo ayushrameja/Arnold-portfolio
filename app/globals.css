@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Google Sans Flex", system-ui, sans-serif;
-  --font-display: "Plaster", "Google Sans Flex", system-ui, sans-serif;
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  --font-logo: "Plaster", system-ui, sans-serif;
 }
 
 :root {
@@ -71,6 +72,12 @@ html[data-theme="light"] {
   }
 }
 
+@keyframes marquee-ltr {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+
 @layer base {
   html,
   body {
@@ -85,6 +92,10 @@ html[data-theme="light"] {
 }
 
 @layer utilities {
+  .font-logo {
+    font-family: "Plaster", system-ui, sans-serif;
+  }
+
   .ui-surface-page {
     background-color: var(--surface-page);
   }
@@ -100,6 +111,15 @@ html[data-theme="light"] {
 
   .ui-card-shadow {
     box-shadow: var(--card-shadow);
+  }
+
+  .bg-dot-pattern {
+    background-image: radial-gradient(var(--surface-stroke) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .animate-marquee-ltr {
+    animation: marquee-ltr 15s linear infinite;
   }
 
   .animate-akd-breathe {

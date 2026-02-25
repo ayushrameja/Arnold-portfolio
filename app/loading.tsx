@@ -30,7 +30,7 @@ export default function Loading() {
             </p>
           </div>
 
-          <p className="order-1 text-center font-display text-[clamp(1.75rem,4vw,3.125rem)] leading-none tracking-[0.02em] sm:order-2">
+          <p className="order-1 text-center font-logo text-[clamp(1.75rem,4vw,3.125rem)] leading-none tracking-[0.02em] sm:order-2">
             AKD
           </p>
 
@@ -44,7 +44,7 @@ export default function Loading() {
 
         <div className="flex flex-1 items-center justify-center">
           <div className="text-center">
-            <p className="font-display text-[clamp(4.5rem,18vw,13.75rem)] leading-none tracking-[0.015em] text-[var(--text-primary)] animate-akd-breathe">
+            <p className="font-logo text-[clamp(4.5rem,18vw,13.75rem)] leading-none tracking-[0.015em] text-[var(--text-primary)] animate-akd-breathe">
               AKD
             </p>
             <p className="mt-5 text-sm tracking-[0.22em] text-[var(--text-muted)] uppercase">
