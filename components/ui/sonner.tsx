@@ -1,20 +1,37 @@
 "use client";
 
-import { Toaster as Sonner } from "sonner";
 import { useEffect, useState } from "react";
-import { THEME_CHANGE_EVENT } from "@/utils/storm";
+import { Toaster as Sonner } from "sonner";
+
+function readResolvedTheme() {
+  if (typeof document === "undefined") {
+    return "light" as const;
+  }
+
+  const theme = document.documentElement.dataset.theme;
+  if (theme === "light" || theme === "dark") {
+    return theme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? ("dark" as const)
+    : ("light" as const);
+}
 
 export function Toaster() {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [theme, setTheme] = useState<"light" | "dark">(() => readResolvedTheme());
 
   useEffect(() => {
-    const apply = () => {
-      setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
-    };
+    const observer = new MutationObserver(() => {
+      setTheme(readResolvedTheme());
+    });
 
-    apply();
-    window.addEventListener(THEME_CHANGE_EVENT, apply as EventListener);
-    return () => window.removeEventListener(THEME_CHANGE_EVENT, apply as EventListener);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -36,4 +53,3 @@ export function Toaster() {
     />
   );
 }
-
