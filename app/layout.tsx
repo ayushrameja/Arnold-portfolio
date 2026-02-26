@@ -1,22 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 
-import { Inter, Outfit } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import { BASE_URL } from "@/constants/links";
-
-const interFont = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 const outfitFont = Outfit({
   subsets: ["latin"],
   variable: "--font-display",
 });
-
-
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -67,7 +60,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Plaster&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Plaster&display=swap"
           rel="stylesheet"
         />
         <link
@@ -86,7 +79,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Arnold" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className={`min-h-dvh overflow-x-hidden font-sans antialiased ${interFont.variable} ${outfitFont.variable}`}>
+      <body
+        className={`min-h-dvh overflow-x-hidden font-sans antialiased ${outfitFont.variable}`}
+      >
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

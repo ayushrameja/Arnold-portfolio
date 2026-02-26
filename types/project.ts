@@ -1,9 +1,15 @@
 export type Project = {
   id: number;
-  name: string;
+  title: string;
+  company: string;
   role: string;
-  client: string;
+  period: string;
+  location: string;
+  summary: string;
   skills: string[];
-  points: string[];
-  link: string;
+  metrics: Array<{
+    label: string;
+    value: string;
+  }>;
+  highlights: string[];
 };

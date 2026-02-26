@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -84,7 +83,10 @@ function ThemeSvgAsset({
   className?: string;
 }) {
   return (
-    <span className={`relative block shrink-0 ${className ?? ""}`} aria-hidden="true">
+    <span
+      className={`relative block shrink-0 ${className ?? ""}`}
+      aria-hidden="true"
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={icon.lightSrc}
@@ -104,8 +106,6 @@ function ThemeSvgAsset({
     </span>
   );
 }
-
-
 
 function HeroTopBar({ timeLabel }: { timeLabel: string }) {
   return (
@@ -130,7 +130,10 @@ function HeroTopBar({ timeLabel }: { timeLabel: string }) {
       </div>
 
       <div className="text-right">
-        <p suppressHydrationWarning className="text-xs tracking-tight text-[var(--text-muted)] sm:text-base lg:text-[clamp(1rem,1.6vw,1.5625rem)]">
+        <p
+          suppressHydrationWarning
+          className="text-xs tracking-tight text-[var(--text-muted)] sm:text-base lg:text-[clamp(1rem,1.6vw,1.5625rem)]"
+        >
           {timeLabel}
         </p>
         <p className="text-sm font-semibold tracking-tight text-[var(--text-primary)] sm:text-lg md:text-xl lg:text-[clamp(1rem,1.6vw,1.5625rem)]">
@@ -154,7 +157,9 @@ function Card({
 }) {
   return (
     <Component
-      className={`ui-surface-card ui-card-shadow rounded-[18px] border p-4 sm:rounded-[20px] sm:p-5 md:p-4 ${className ?? ""}`}
+      className={`ui-surface-card ui-card-shadow rounded-[18px] border p-4 sm:rounded-[20px] sm:p-5 md:p-4 ${
+        className ?? ""
+      }`}
       {...props}
     >
       {children}
@@ -186,12 +191,30 @@ export default function HeroSection() {
       const box5 = box5Ref.current?.getBoundingClientRect();
       const lgActive = window.matchMedia("(min-width: 1024px)").matches;
       const xlActive = window.matchMedia("(min-width: 1280px)").matches;
-      const gridCols = outerGridRef.current ? window.getComputedStyle(outerGridRef.current).gridTemplateColumns : null;
-      console.log('[DEBUG 4d97a2]', JSON.stringify({viewportWidth:vw,lgActive,xlActive,gridCols,box2:{w:Math.round(box2?.width??0),h:Math.round(box2?.height??0)},box5:{w:Math.round(box5?.width??0),h:Math.round(box5?.height??0)}}));
+      const gridCols = outerGridRef.current
+        ? window.getComputedStyle(outerGridRef.current).gridTemplateColumns
+        : null;
+      console.log(
+        "[DEBUG 4d97a2]",
+        JSON.stringify({
+          viewportWidth: vw,
+          lgActive,
+          xlActive,
+          gridCols,
+          box2: {
+            w: Math.round(box2?.width ?? 0),
+            h: Math.round(box2?.height ?? 0),
+          },
+          box5: {
+            w: Math.round(box5?.width ?? 0),
+            h: Math.round(box5?.height ?? 0),
+          },
+        }),
+      );
     };
     measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
   }, []);
   // #endregion
 
@@ -207,7 +230,10 @@ export default function HeroSection() {
         </div>
 
         <div className="grid min-h-0 place-items-center py-3 sm:py-4 md:py-5">
-          <div ref={outerGridRef} className="grid w-full gap-[clamp(5px,0.8vw,10px)] md:grid-cols-[minmax(0,2fr)_minmax(14rem,1fr)] md:grid-rows-[1fr_1fr] xl:grid-cols-[minmax(0,1fr)_24.125rem]">
+          <div
+            ref={outerGridRef}
+            className="grid w-full gap-[clamp(5px,0.8vw,10px)] md:grid-cols-[minmax(0,2fr)_minmax(14rem,1fr)] md:grid-rows-[1fr_1fr] xl:grid-cols-[minmax(0,1fr)_24.125rem]"
+          >
             {/* Box 1 – Intro (row 1, col 1) */}
             <Card className="md:rounded-none md:rounded-tl-[20px] md:h-[clamp(180px,33vh,301px)] xl:p-[clamp(12px,1.5vw,20px)]">
               <div className="grid h-full items-center gap-4 sm:gap-6 md:grid-cols-[minmax(10rem,clamp(10rem,18vw,15.875rem))_minmax(0,1fr)] md:gap-[clamp(1rem,2vw,1.75rem)] xl:gap-[clamp(1.5rem,2.5vw,2.25rem)]">
@@ -230,9 +256,9 @@ export default function HeroSection() {
                     Arnold Kevin Desouza
                   </h1>
                   <p className="mt-[clamp(1.5rem,3vw,2.5rem)] max-w-[29rem] text-sm leading-snug text-[var(--text-primary)] [text-wrap:pretty] sm:text-base md:text-[clamp(0.875rem,1.4vw,1.25rem)] md:leading-[1.28]">
-                    I turn complex datasets into decision-ready systems: resilient
-                    pipelines, useful dashboards, and automation that won&apos;t become
-                    next quarter&apos;s cleanup job.
+                    I turn complex datasets into decision-ready systems:
+                    resilient pipelines, useful dashboards, and automation that
+                    won&apos;t become next quarter&apos;s cleanup job.
                   </p>
                 </div>
               </div>
@@ -261,7 +287,10 @@ export default function HeroSection() {
                       <div className="relative z-10 flex w-full items-center justify-between px-5 py-3 sm:px-6 sm:py-3.5 transition-opacity duration-300 group-hover:opacity-0">
                         <div className="flex items-center gap-4 sm:gap-5">
                           <div className="flex size-[20px] shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 sm:size-[24px]">
-                            <ThemeSvgAsset icon={icon} className="size-full object-contain opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+                            <ThemeSvgAsset
+                              icon={icon}
+                              className="size-full object-contain opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+                            />
                           </div>
                           <span className="text-[14px] font-medium tracking-tight text-[var(--text-primary)] sm:text-[15px] xl:text-[16px]">
                             {label}
@@ -277,7 +306,14 @@ export default function HeroSection() {
                         </div>
                         <div className="flex-1 flex items-center h-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
                           <div className="animate-marquee-ltr flex w-max gap-4 font-display text-lg tracking-widest text-[var(--surface-page)] pt-0.5">
-                            {Array.from({ length: 12 }).map((_, i) => <span key={i} className="whitespace-nowrap uppercase">{label}</span>)}
+                            {Array.from({ length: 12 }).map((_, i) => (
+                              <span
+                                key={i}
+                                className="whitespace-nowrap uppercase"
+                              >
+                                {label}
+                              </span>
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -287,20 +323,30 @@ export default function HeroSection() {
               </div>
             </Card>
 
-            {/* Box 2-3 – Experience & Resume (row 2, col 1) */}
-            {/* #region agent log */}<div ref={box2Ref} className="grid gap-[clamp(5px,0.8vw,10px)] md:grid-cols-2">{/* #endregion */}
-              <Card as="a" href={LINKS.github} target="_blank" rel="noreferrer noopener" className="group relative block cursor-pointer overflow-hidden md:rounded-none md:rounded-bl-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+            {/* Box 2-3 – Projects & Contact (row 2, col 1) */}
+            {/* #region agent log */}
+            <div
+              ref={box2Ref}
+              className="grid gap-[clamp(5px,0.8vw,10px)] md:grid-cols-2"
+            >
+              {/* #endregion */}
+              <Card
+                as="a"
+                href="#projects"
+                className="group relative block cursor-pointer overflow-hidden md:rounded-none md:rounded-bl-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]"
+              >
                 <div className="flex h-full flex-col relative z-10 transition-opacity duration-300 group-hover:opacity-0">
                   <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
-                    Experience
+                    Projects
                   </h2>
                   <p className="mt-[clamp(1rem,1.5vw,2rem)] max-w-[28ch] text-base leading-snug text-[var(--text-primary)] [text-wrap:pretty] sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)] md:leading-[1.28]">
-                    I build <strong>repeatable workflows</strong>,{" "}
-                    <strong>fast transformations</strong>, and low-friction{" "}
-                    <strong>dashboards</strong>.
+                    Resume-backed case studies in{" "}
+                    <strong>pipelines</strong>, <strong>analytics</strong>, and{" "}
+                    <strong>operational reporting</strong>.
                   </p>
                   <div className="mt-auto inline-flex w-fit items-center gap-1 text-base font-medium underline underline-offset-4 transition sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)]">
-                    See work <ArrowRight className="size-4" aria-hidden="true" />
+                    See projects{" "}
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </div>
                 </div>
 
@@ -311,23 +357,31 @@ export default function HeroSection() {
                   </div>
                   <div className="flex items-center overflow-hidden pb-4 sm:pb-5 xl:pb-[clamp(14px,1.8vw,24px)] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
                     <div className="animate-marquee-ltr flex w-max gap-6 px-4 font-display text-4xl sm:text-5xl uppercase tracking-widest text-[var(--surface-page)]">
-                      {Array.from({ length: 8 }).map((_, i) => <span key={i}>EXPERIENCE</span>)}
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <span key={i}>PROJECTS</span>
+                      ))}
                     </div>
                   </div>
                 </div>
               </Card>
 
-              <Card as={Link} href="/resume" className="group relative block cursor-pointer overflow-hidden md:rounded-none md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+              <Card
+                as="a"
+                href="#contact"
+                className="group relative block cursor-pointer overflow-hidden md:rounded-none md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]"
+              >
                 <div className="flex h-full flex-col relative z-10 transition-opacity duration-300 group-hover:opacity-0">
                   <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
-                    Resume
+                    Contact
                   </h2>
                   <p className="mt-[clamp(1rem,1.5vw,2rem)] max-w-[28ch] text-base leading-snug text-[var(--text-primary)] [text-wrap:pretty] sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)] md:leading-[1.28]">
-                    A quick <strong>overview of what I&apos;ve worked on</strong> and{" "}
-                    <strong>what I&apos;m good at</strong>.
+                    Based in <strong>Vancouver, BC</strong>. Open to{" "}
+                    <strong>data engineering</strong>,{" "}
+                    <strong>analytics</strong>, and automation work.
                   </p>
                   <div className="mt-auto inline-flex w-fit items-center gap-1 text-base font-medium underline underline-offset-4 transition sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)]">
-                    View Resume <ArrowRight className="size-4" aria-hidden="true" />
+                    Start a conversation{" "}
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </div>
                 </div>
 
@@ -338,7 +392,9 @@ export default function HeroSection() {
                   </div>
                   <div className="flex items-center overflow-hidden pb-4 sm:pb-5 xl:pb-[clamp(14px,1.8vw,24px)] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
                     <div className="animate-marquee-ltr flex w-max gap-6 px-4 font-display text-4xl sm:text-5xl uppercase tracking-widest text-[var(--surface-page)]">
-                      {Array.from({ length: 8 }).map((_, i) => <span key={i}>RESUME</span>)}
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <span key={i}>CONTACT</span>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -346,43 +402,50 @@ export default function HeroSection() {
             </div>
 
             {/* Box 5 – Tech stack (row 2, col 2) */}
-            {/* #region agent log */}<div ref={box5Ref} className="h-full">{/* #endregion */}
-            <Card className="md:rounded-none md:rounded-br-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
-              <div className="flex h-full flex-col">
-                <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
-                  Core Stack
-                </h2>
-                <div className="mt-[clamp(1rem,1.5vw,2rem)] grid w-full grid-cols-2 gap-[2px]">
-                  {STACK_ITEMS.map(({ label, icon }, index) => {
-                    let radiusClass = "";
-                    if (index === 0) {
-                      radiusClass = "rounded-tl-[20px]";
-                    } else if (index === 1) {
-                      radiusClass = "rounded-tr-[20px]";
-                    } else if (index === STACK_ITEMS.length - 2) {
-                      radiusClass = "rounded-bl-[20px]";
-                    } else if (index === STACK_ITEMS.length - 1) {
-                      radiusClass = "rounded-br-[20px]";
-                    }
+            {/* #region agent log */}
+            <div ref={box5Ref} className="h-full">
+              {/* #endregion */}
+              <Card className="md:rounded-none md:rounded-br-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+                <div className="flex h-full flex-col">
+                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
+                    Core Stack
+                  </h2>
+                  <div className="mt-[clamp(1rem,1.5vw,2rem)] grid w-full grid-cols-2 gap-[2px]">
+                    {STACK_ITEMS.map(({ label, icon }, index) => {
+                      let radiusClass = "";
+                      if (index === 0) {
+                        radiusClass = "rounded-tl-[20px]";
+                      } else if (index === 1) {
+                        radiusClass = "rounded-tr-[20px]";
+                      } else if (index === STACK_ITEMS.length - 2) {
+                        radiusClass = "rounded-bl-[20px]";
+                      } else if (index === STACK_ITEMS.length - 1) {
+                        radiusClass = "rounded-br-[20px]";
+                      }
 
-                    return (
-                      <div
-                        key={label}
-                        className={`ui-surface-inset flex cursor-default items-center gap-2.5 sm:gap-3 px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-[var(--surface-page)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:ring-1 hover:ring-[var(--border-subtle)] dark:hover:shadow-[0_2px_8px_rgba(255,255,255,0.03)] transition-all duration-300 hover:scale-[1.02] hover:z-10 ${radiusClass}`}
-                      >
-                        <div className="flex size-[1.1rem] shrink-0 items-center justify-center sm:size-[1.2rem]">
-                          <ThemeSvgAsset icon={icon} className="size-full object-contain opacity-85" />
+                      return (
+                        <div
+                          key={label}
+                          className={`ui-surface-inset flex cursor-default items-center gap-2.5 sm:gap-3 px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-[var(--surface-page)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:ring-1 hover:ring-[var(--border-subtle)] dark:hover:shadow-[0_2px_8px_rgba(255,255,255,0.03)] transition-all duration-300 hover:scale-[1.02] hover:z-10 ${radiusClass}`}
+                        >
+                          <div className="flex size-[1.1rem] shrink-0 items-center justify-center sm:size-[1.2rem]">
+                            <ThemeSvgAsset
+                              icon={icon}
+                              className="size-full object-contain opacity-85"
+                            />
+                          </div>
+                          <span className="min-w-0 truncate text-[13px] font-medium tracking-wide text-[var(--text-primary)] sm:text-[14px]">
+                            {label}
+                          </span>
                         </div>
-                        <span className="min-w-0 truncate text-[13px] font-medium tracking-wide text-[var(--text-primary)] sm:text-[14px]">
-                          {label}
-                        </span>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            </Card>
-            {/* #region agent log */}</div>{/* #endregion */}
+              </Card>
+              {/* #region agent log */}
+            </div>
+            {/* #endregion */}
           </div>
         </div>
       </div>

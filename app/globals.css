@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-sans: "Google Sans Flex", system-ui, sans-serif;
   --font-display: var(--font-display), var(--font-sans), system-ui, sans-serif;
   --font-logo: "Plaster", system-ui, sans-serif;
 }
@@ -118,6 +118,14 @@ html[data-theme="light"] {
     background-size: 20px 20px;
   }
 
+  .bg-wave-pattern {
+    background-image:
+      radial-gradient(circle at 100% 50%, transparent 13px, var(--surface-stroke) 13.5px, transparent 14px),
+      radial-gradient(circle at 0% 50%, transparent 13px, var(--surface-stroke) 13.5px, transparent 14px);
+    background-size: 28px 18px;
+    background-position: 0 0, 14px 9px;
+  }
+
   .animate-marquee-ltr {
     animation: marquee-ltr 15s linear infinite;
   }
@@ -154,6 +162,7 @@ html[data-theme="dark"] .theme-asset-dark {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .animate-marquee-ltr,
   .animate-akd-breathe,
   .animate-status-pulse {
     animation: none !important;
