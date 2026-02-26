@@ -1,8 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import { BASE_URL } from "@/constants/links";
+
+const outfitFont = Outfit({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -29,6 +36,23 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`(() => {
+            const key = "akd-theme";
+            try {
+              const stored = window.localStorage.getItem(key);
+              const resolved = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+              document.documentElement.dataset.theme = resolved;
+              document.documentElement.style.colorScheme = resolved;
+            } catch {
+              const fallback = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+              document.documentElement.dataset.theme = fallback;
+              document.documentElement.style.colorScheme = fallback;
+            }
+          })();`}
+        </Script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -36,7 +60,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Plaster&family=Space+Grotesk:wght@300..700&family=Inter:wght@100..900&family=Lora:wght@400..700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Plaster&display=swap"
           rel="stylesheet"
         />
         <link
@@ -55,7 +79,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Arnold" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className="min-h-dvh overflow-x-hidden bg-brand-bg font-sans text-white antialiased selection:bg-brand-logo-top/30 selection:text-white">
+      <body
+        className={`min-h-dvh overflow-x-hidden font-sans antialiased ${outfitFont.variable}`}
+      >
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

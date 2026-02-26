@@ -1,71 +1,20 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
-import { Suspense, useCallback, useEffect, useState } from "react";
-
-import InitialLoader from "@/components/InitialLoader";
-import SmoothScroll from "@/components/SmoothScroll";
-import TopNav from "@/components/TopNav";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
-import StormTransition from "@/components/StormTransition";
 
 export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [showLoader, setShowLoader] = useState(true);
-
-  const handleLoaderComplete = useCallback(() => {
-    setShowLoader(false);
-  }, []);
-
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    const html = document.documentElement;
-    const body = document.body;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-
-    if (showLoader) {
-      html.style.overflow = "hidden";
-      body.style.overflow = "hidden";
-    } else {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-    }
-
-    return () => {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-    };
-  }, [showLoader]);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
-    <SmoothScroll>
-      <div className="relative bg-brand-bg">
-        {!showLoader && <TopNav />}
-        <div className="relative" id="app-shell">
-          <Suspense fallback={<LoadingSpinner />}>
-            <div id="page-shell">{!showLoader && children}</div>
-          </Suspense>
-        </div>
-        <Toaster />
-        <StormTransition />
-        <AnimatePresence initial={false}>
-          {showLoader ? (
-            <InitialLoader onComplete={handleLoaderComplete} />
-          ) : null}
-        </AnimatePresence>
-      </div>
-    </SmoothScroll>
-  );
-}
-
-function LoadingSpinner() {
-  return (
-    <div className="flex min-h-dvh items-center justify-center bg-brand-bg">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-    </div>
+    <>
+      {children}
+      {mounted && <Toaster />}
+    </>
   );
 }

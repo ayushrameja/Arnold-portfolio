@@ -1,250 +1,336 @@
 "use client";
 
-import Link from "next/link";
-import type { ComponentProps } from "react";
-import { motion } from "framer-motion";
-import { ArrowUpRight, CheckCircle2 } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Github,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+  Send,
+  Sparkles,
+  CheckCircle2,
+} from "lucide-react";
 
-import { LINKS } from "@/constants/links";
 import { useContactForm } from "@/hooks";
-import { scrollFadeUp } from "@/lib/animations";
-import TextReveal from "@/components/TextReveal";
+import { LINKS } from "@/constants/links";
+
+type ContactLink = {
+  label: string;
+  value: string;
+  href: string;
+  icon: React.ElementType;
+  external?: boolean;
+};
+
+const PHONE_DISPLAY = "+1 (778) 522-9460";
+const PHONE_HREF = "tel:+17785229460";
+
+const CONTACT_LINKS: ContactLink[] = [
+  {
+    label: "Email",
+    value: LINKS.email,
+    href: `mailto:${LINKS.email}`,
+    icon: Mail,
+  },
+  {
+    label: "Phone",
+    value: PHONE_DISPLAY,
+    href: PHONE_HREF,
+    icon: Phone,
+  },
+  {
+    label: "LinkedIn",
+    value: "arnold-desouza-13a554206",
+    href: LINKS.linkedin,
+    icon: Linkedin,
+    external: true,
+  },
+  {
+    label: "GitHub",
+    value: "arnolddesouza",
+    href: LINKS.github,
+    icon: Github,
+    external: true,
+  },
+];
+
+const FOCUS_AREAS = [
+  "Data Engineering",
+  "Analytics",
+  "Dashboards",
+  "ETL / ELT",
+  "Databricks",
+  "Snowflake",
+  "Azure",
+] as const;
 
 export default function ContactSection() {
-  const { formState, isSubmitting, isSubmitted, submittedName, updateField, handleSubmit, reset } = useContactForm();
+  const {
+    formState,
+    isSubmitting,
+    isSubmitted,
+    submittedName,
+    updateField,
+    handleSubmit,
+    reset,
+  } = useContactForm();
 
   return (
     <section
       id="contact"
-      className="relative z-10 overflow-hidden bg-transparent px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24"
+      aria-label="Contact"
+      className="ui-surface-page bg-dot-pattern relative isolate scroll-mt-4 px-4 pb-8 pt-1 sm:scroll-mt-6 sm:px-6 sm:pb-10 md:px-10 md:pb-12 xl:px-[52px]"
     >
-      <div className="relative z-10 mx-auto w-full max-w-[1320px]">
-        <div className="grid gap-4 lg:grid-cols-12">
-          <motion.div
-            className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_20px_60px_rgba(20,25,57,0.18)] backdrop-blur-md sm:p-6 lg:col-span-8 lg:p-7"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
-            variants={scrollFadeUp}
-          >
-            <div className="pointer-events-none absolute inset-0 opacity-80">
-              <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-white/8 blur-3xl" />
-              <div className="absolute -bottom-12 left-1/4 h-48 w-48 rounded-full bg-[#C1C9FF]/12 blur-3xl" />
-            </div>
-
-            <div className="relative z-10">
-              <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-                <div className="max-w-2xl">
-                  <TextReveal as="p" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45">
-                    Contact
-                  </TextReveal>
-                  <TextReveal
-                    as="h2"
-                    delay={0.08}
-                    className="mt-3 font-editorial text-3xl leading-none tracking-tight text-white sm:text-4xl"
-                  >
-                    Ping me, let&apos;s build something
-                  </TextReveal>
-                  <TextReveal
-                    as="p"
-                    delay={0.15}
-                    className="mt-3 text-sm leading-relaxed text-white/72 md:text-base"
-                  >
-                    Short message is perfect. I usually reply fast, unless a dashboard just broke five minutes before
-                    someone&apos;s leadership meeting.
-                  </TextReveal>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white/70">
-                  Usually replies in 24-48h
-                </div>
+      <div className="mx-auto max-w-[1280px]">
+        <div className="grid gap-[clamp(5px,0.8vw,10px)]">
+          <div className="grid gap-[clamp(5px,0.8vw,10px)] sm:grid-cols-2">
+            <div className="ui-surface-card ui-card-shadow rounded-[18px] border p-4 sm:rounded-[20px] sm:p-5 md:p-6">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[var(--surface-stroke)] px-3 py-1.5 text-xs font-medium tracking-[0.14em] uppercase text-[var(--text-muted)]">
+                <Sparkles className="size-3.5" aria-hidden="true" />
+                Contact
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5 lg:p-6">
-                  {isSubmitted ? (
-                    <div className="flex min-h-[360px] flex-col items-center justify-center text-center">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05]">
-                        <CheckCircle2 className="h-7 w-7 text-[#C1C9FF]" />
-                      </div>
-                      <h3 className="mt-5 font-editorial text-2xl tracking-tight text-white">
-                        Message sent
-                      </h3>
-                      <p className="mt-2 max-w-sm text-sm text-white/70">
-                        {submittedName ? `Thanks, ${submittedName}. ` : null}
-                        I got your note and I&apos;ll reply soon.
-                      </p>
-                      <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                        <button
-                          type="button"
-                          onClick={reset}
-                          className="btn-modern btn-primary inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-xl px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] shadow-xl"
-                        >
-                          Send another
-                        </button>
-                        <Link
-                          href={`mailto:${LINKS.email}`}
-                          className="btn-modern btn-secondary inline-flex items-center justify-center overflow-hidden rounded-xl px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] shadow-xl"
-                        >
-                          Email instead
-                        </Link>
-                      </div>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                      <div>
-                        <label htmlFor="name" className="text-xs font-semibold uppercase tracking-widest text-white/80">
-                          Name
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formState.name}
-                          onChange={(e) => updateField("name", e.target.value)}
-                          required
-                          placeholder="Your name"
-                          className="mt-2 w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/35 transition-colors focus:border-[#C1C9FF]/50 focus:ring-2 focus:ring-white/10"
-                        />
-                      </div>
+              <h2 className="mt-4 text-2xl font-semibold leading-[1.03] tracking-tight [text-wrap:balance] sm:text-3xl md:text-4xl">
+                Let&apos;s build data systems that survive handoffs.
+              </h2>
 
-                      <div>
-                        <label htmlFor="email" className="text-xs font-semibold uppercase tracking-widest text-white/80">
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formState.email}
-                          onChange={(e) => updateField("email", e.target.value)}
-                          required
-                          placeholder="you@domain.com"
-                          className="mt-2 w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/35 transition-colors focus:border-[#C1C9FF]/50 focus:ring-2 focus:ring-white/10"
-                        />
-                      </div>
-
-                      <div>
-                        <label htmlFor="message" className="text-xs font-semibold uppercase tracking-widest text-white/80">
-                          Message
-                        </label>
-                        <textarea
-                          name="message"
-                          id="message"
-                          value={formState.message}
-                          onChange={(e) => updateField("message", e.target.value)}
-                          required
-                          placeholder="What are you building, and what do you need help with?"
-                          className="mt-2 h-36 w-full resize-none rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/35 transition-colors focus:border-[#C1C9FF]/50 focus:ring-2 focus:ring-white/10"
-                        />
-                      </div>
-
-                      <div className="flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between pt-2">
-                        <p className="text-sm text-white/68">
-                          Prefer email?{" "}
-                          <Link
-                            href={`mailto:${LINKS.email}`}
-                            className="font-medium text-white underline decoration-white/20 underline-offset-4 transition hover:decoration-[#C1C9FF]/60 hover:text-[#C1C9FF]"
-                          >
-                            {LINKS.email}
-                          </Link>
-                        </p>
-                        <motion.div
-                          whileHover={{ y: -2 }}
-                          whileTap={{ scale: 0.97 }}
-                          transition={{ duration: 0.2, ease: "easeOut" }}
-                        >
-                          <button
-                            type="submit"
-                            disabled={isSubmitting || isSubmitted}
-                            className="btn-modern btn-primary inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-xl px-8 py-4 text-[10px] font-semibold uppercase tracking-[0.2em] shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            {isSubmitting ? "Sending..." : isSubmitted ? "Sent!" : "Send Message"}
-                          </button>
-                        </motion.div>
-                      </div>
-                    </form>
-                  )}
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="grid gap-4 lg:col-span-4"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
-            variants={scrollFadeUp}
-          >
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45">
-                Availability
-              </p>
-              <p className="mt-2 font-editorial text-3xl leading-none text-white">
-                Open
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-white/65">
-                Full-time and contract work in analytics, reporting, and data engineering.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_20px_60px_rgba(20,25,57,0.16)] backdrop-blur-md sm:p-6">
-              <h3 className="font-editorial text-2xl tracking-tight text-white">Links</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/68">
-                Professional lurking encouraged. Please no Jira tickets about my vibe.
-              </p>
-
-              <div className="mt-5 grid gap-3">
-                <ContactLink href={`mailto:${LINKS.email}`}>Mail</ContactLink>
-                <ContactLink href={LINKS.linkedin} target="_blank" rel="noopener noreferrer">
-                  LinkedIn
-                </ContactLink>
-                <ContactLink href={LINKS.github} target="_blank" rel="noopener noreferrer">
-                  GitHub
-                </ContactLink>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_20px_60px_rgba(20,25,57,0.16)] backdrop-blur-md sm:p-6">
-              <h3 className="font-editorial text-2xl tracking-tight text-white">
-                What I&apos;m Great At
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/65">
-                The stuff that keeps reporting from becoming interpretive art.
+              <p className="mt-4 max-w-[52ch] text-sm leading-snug text-[var(--text-subtle)] sm:text-base">
+                Arnold is based in Vancouver, BC and open to conversations
+                around data engineering, analytics, reporting automation, and
+                cloud data platform work.
               </p>
 
               <div className="mt-5 flex flex-wrap gap-2">
-                <span className="rounded-xl border border-white/15 bg-white/[0.05] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/90">
-                  Data Analytics & Visualization
-                </span>
-                <span className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] text-white/75">
-                  Machine Learning & AI
-                </span>
-                <span className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] text-white/75">
-                  Cloud & Data Engineering
-                </span>
+                {FOCUS_AREAS.map((area) => (
+                  <span
+                    key={area}
+                    className="ui-surface-inset rounded-full px-3 py-1.5 text-xs font-medium tracking-tight sm:text-sm"
+                  >
+                    {area}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-5 ui-surface-inset rounded-[16px] p-4">
+                <div className="flex items-start gap-3">
+                  <MapPin
+                    className="mt-0.5 size-4 shrink-0 text-[var(--text-muted)]"
+                    aria-hidden="true"
+                  />
+                  <div>
+                    <p className="text-sm font-medium tracking-tight sm:text-base">
+                      Vancouver, BC, Canada
+                    </p>
+                    <p className="mt-1 text-xs leading-snug text-[var(--text-muted)] sm:text-sm">
+                      Remote-friendly and comfortable working across time zones
+                      (already collaborated with US-based stakeholders).
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </motion.div>
+
+            <div className="ui-surface-card ui-card-shadow rounded-[18px] border p-4 sm:rounded-[20px] sm:p-5 md:p-6">
+              <p className="text-sm font-medium tracking-tight text-[var(--text-primary)]">
+                Reach out directly
+              </p>
+
+              <div className="mt-4 grid gap-1">
+                {CONTACT_LINKS.map(({ label, value, href, icon: Icon, external }, index) => {
+                  const radiusClass =
+                    index === 0
+                      ? "rounded-t-[16px]"
+                      : index === CONTACT_LINKS.length - 1
+                        ? "rounded-b-[16px]"
+                        : "";
+
+                  return (
+                    <a
+                      key={label}
+                      href={href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noreferrer noopener" : undefined}
+                      className={`ui-surface-inset group relative block overflow-hidden transition-all duration-300 hover:z-10 hover:-translate-y-[2px] hover:bg-[var(--surface-page)] hover:ring-1 hover:ring-[var(--surface-stroke)] ${radiusClass}`}
+                    >
+                      <div className="relative z-10 flex items-center justify-between gap-3 px-4 py-3 transition-opacity duration-300 group-hover:opacity-0 sm:px-5 sm:py-3.5">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <Icon
+                            className="size-4 shrink-0 text-[var(--text-subtle)] sm:size-5"
+                            aria-hidden="true"
+                          />
+                          <div className="min-w-0">
+                            <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                              {label}
+                            </p>
+                            <p className="truncate text-sm font-medium tracking-tight text-[var(--text-primary)] sm:text-base">
+                              {value}
+                            </p>
+                          </div>
+                        </div>
+                        <ArrowRight className="size-4 shrink-0 text-[var(--text-muted)] opacity-0 -translate-x-2 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[var(--text-primary)]" />
+                      </div>
+
+                      <div className="absolute inset-0 z-20 flex bg-[var(--text-primary)] text-[var(--surface-page)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <div className="flex shrink-0 items-center bg-[var(--text-primary)] pl-4 pr-2 sm:pl-5 sm:pr-3">
+                          <ArrowUpRight className="size-4 sm:size-5" />
+                        </div>
+                        <div className="flex h-full flex-1 items-center overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                          <div className="animate-marquee-ltr flex w-max gap-4 font-display text-lg tracking-widest uppercase sm:text-xl">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                              <span key={i}>{label}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="ui-surface-card ui-card-shadow rounded-[18px] border p-4 sm:rounded-[20px] sm:p-5 md:p-6">
+            {!isSubmitted ? (
+              <>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--text-muted)] sm:text-sm">
+                      Message Arnold
+                    </p>
+                    <h3 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">
+                      Project inquiry / role opportunity
+                    </h3>
+                  </div>
+                  <span className="ui-surface-inset rounded-full px-3 py-1.5 text-xs font-medium tracking-tight text-[var(--text-primary)] sm:text-sm">
+                    Usually faster than most enterprise approvals
+                  </span>
+                </div>
+
+                <p className="mt-3 max-w-[64ch] text-sm leading-snug text-[var(--text-subtle)] sm:text-base">
+                  Share what you&apos;re building, what&apos;s breaking, or what
+                  needs to be automated. Pipelines, dashboards, data quality
+                  cleanup, and reporting workflows are all fair game.
+                </p>
+
+                <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label
+                        htmlFor="name"
+                        className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]"
+                      >
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        autoComplete="name"
+                        value={formState.name}
+                        onChange={(e) => updateField("name", e.target.value)}
+                        required
+                        placeholder="Jane Doe"
+                        className="ui-surface-inset mt-2 block w-full rounded-xl border border-transparent px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none ring-0 transition focus-visible:border-[var(--surface-stroke)] focus-visible:ring-1 focus-visible:ring-[var(--text-primary)] sm:text-base"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]"
+                      >
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        autoComplete="email"
+                        value={formState.email}
+                        onChange={(e) => updateField("email", e.target.value)}
+                        required
+                        placeholder="you@company.com"
+                        className="ui-surface-inset mt-2 block w-full rounded-xl border border-transparent px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none ring-0 transition focus-visible:border-[var(--surface-stroke)] focus-visible:ring-1 focus-visible:ring-[var(--text-primary)] sm:text-base"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="message"
+                      className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]"
+                    >
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={7}
+                      value={formState.message}
+                      onChange={(e) => updateField("message", e.target.value)}
+                      required
+                      placeholder="We need help with Databricks + Snowflake pipelines, dashboard cleanup, and faster validation workflows..."
+                      className="ui-surface-inset mt-2 block w-full resize-y rounded-xl border border-transparent px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none ring-0 transition focus-visible:border-[var(--surface-stroke)] focus-visible:ring-1 focus-visible:ring-[var(--text-primary)] sm:text-base"
+                    />
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-xs leading-snug text-[var(--text-muted)] sm:text-sm">
+                      Contact form sends to Arnold&apos;s email. If email delivery
+                      is down, the direct links above still work.
+                    </p>
+
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="inline-flex items-center gap-2 rounded-full bg-[var(--text-primary)] px-4 py-2.5 text-sm font-medium text-[var(--surface-page)] transition hover:-translate-y-[1px] hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60 sm:px-5 sm:text-base"
+                    >
+                      <Send className="size-4" aria-hidden="true" />
+                      {isSubmitting ? "Sending..." : "Send message"}
+                    </button>
+                  </div>
+                </form>
+              </>
+            ) : (
+              <div className="grid h-full min-h-[24rem] place-items-center">
+                <div className="w-full max-w-xl text-center">
+                  <div className="ui-surface-inset mx-auto flex size-14 items-center justify-center rounded-full">
+                    <CheckCircle2 className="size-7 text-emerald-500" aria-hidden="true" />
+                  </div>
+                  <p className="mt-4 text-xs font-medium uppercase tracking-[0.14em] text-[var(--text-muted)] sm:text-sm">
+                    Message sent
+                  </p>
+                  <h3 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
+                    Thanks{submittedName ? `, ${submittedName}` : ""}.
+                  </h3>
+                  <p className="mt-3 text-sm leading-snug text-[var(--text-subtle)] sm:text-base">
+                    Arnold should receive your message shortly. If the internet
+                    behaves, he&apos;ll get back to you soon.
+                  </p>
+                  <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={reset}
+                      className="ui-surface-inset rounded-full px-4 py-2 text-sm font-medium tracking-tight transition hover:-translate-y-[1px] hover:ring-1 hover:ring-[var(--surface-stroke)] sm:text-base"
+                    >
+                      Send another message
+                    </button>
+                    <a
+                      href={`mailto:${LINKS.email}`}
+                      className="inline-flex items-center gap-1 rounded-full border border-[var(--surface-stroke)] px-4 py-2 text-sm font-medium tracking-tight transition hover:-translate-y-[1px] hover:bg-[var(--surface-inset)] sm:text-base"
+                    >
+                      Email directly
+                      <ArrowRight className="size-4" aria-hidden="true" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function ContactLink({
-  children,
-  ...props
-}: ComponentProps<typeof Link>) {
-  return (
-    <Link
-      {...props}
-      className="group inline-flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-white/[0.08]"
-    >
-      <span>{children}</span>
-      <ArrowUpRight
-        aria-hidden
-        size={14}
-        className="text-white/55 transition-colors group-hover:text-[#C1C9FF]"
-      />
-    </Link>
   );
 }

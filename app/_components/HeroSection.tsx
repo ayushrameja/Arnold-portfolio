@@ -1,347 +1,454 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { useLenis } from "lenis/react";
-import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowRight,
-  BarChart3,
-  Briefcase,
-  Code2,
-  Database,
-  Github,
-  Linkedin,
-  Mail,
-  MapPin,
-  Sparkles,
-  Workflow,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
+import ThemeToggle from "@/components/ThemeToggle";
 import { LINKS } from "@/constants/links";
-import { scrollToTarget } from "@/utils/scroll";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.08,
-    },
-  },
+type SocialLink = {
+  href: string;
+  label: string;
+  icon: ThemedIcon;
+  external?: boolean;
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 28, filter: "blur(8px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
-  },
+type StackItem = {
+  label: string;
+  icon: ThemedIcon;
 };
 
-function useVancouverTime() {
-  const formatter = useMemo(
-    () =>
-      new Intl.DateTimeFormat("en-CA", {
-        timeZone: "America/Vancouver",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      }),
-    [],
-  );
+type ThemedIcon = {
+  lightSrc: string;
+  darkSrc: string;
+  width: number;
+  height: number;
+};
 
-  const [time, setTime] = useState(() => formatter.format(new Date()));
-
-  useEffect(() => {
-    const interval = window.setInterval(
-      () => setTime(formatter.format(new Date())),
-      1000,
-    );
-    return () => window.clearInterval(interval);
-  }, [formatter]);
-
-  return time;
+function heroIcon(name: string, width: number, height: number): ThemedIcon {
+  return {
+    lightSrc: `/assets/icons/hero/light/${name}.svg`,
+    darkSrc: `/assets/icons/hero/dark/${name}.svg`,
+    width,
+    height,
+  };
 }
 
-function HeroCard({
-  children,
+const SOCIAL_LINKS: SocialLink[] = [
+  {
+    href: LINKS.linkedin,
+    label: "LinkedIn",
+    icon: heroIcon("linkedin", 29, 34),
+    external: true,
+  },
+  {
+    href: LINKS.github,
+    label: "GitHub",
+    icon: heroIcon("github", 35, 35),
+    external: true,
+  },
+  {
+    href: `mailto:${LINKS.email}`,
+    label: "Email",
+    icon: heroIcon("email", 29, 29),
+  },
+];
+
+const STACK_ITEMS: StackItem[] = [
+  { label: "SQL", icon: heroIcon("sql", 35, 35) },
+  { label: "Python", icon: heroIcon("python", 35, 35) },
+  { label: "ETL", icon: heroIcon("etl", 35, 35) },
+  { label: "BI", icon: heroIcon("bi", 29, 29) },
+  { label: "DBT", icon: heroIcon("dbt", 30, 30) },
+  { label: "Pipeline", icon: heroIcon("pipeline", 33, 33) },
+];
+
+const VANCOUVER_TIME = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Vancouver",
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+});
+
+function getVancouverTime() {
+  return VANCOUVER_TIME.format(new Date());
+}
+
+function ThemeSvgAsset({
+  icon,
   className,
 }: {
-  children: React.ReactNode;
+  icon: ThemedIcon;
   className?: string;
 }) {
   return (
-    <motion.div
-      variants={itemVariants}
-      className={`rounded-2xl border border-white/10 bg-white/5 ${
+    <span
+      className={`relative block shrink-0 ${className ?? ""}`}
+      aria-hidden="true"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={icon.lightSrc}
+        alt=""
+        width={icon.width}
+        height={icon.height}
+        className="theme-asset-light h-full w-full object-contain"
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={icon.darkSrc}
+        alt=""
+        width={icon.width}
+        height={icon.height}
+        className="theme-asset-dark absolute inset-0 h-full w-full object-contain"
+      />
+    </span>
+  );
+}
+
+function HeroTopBar({ timeLabel }: { timeLabel: string }) {
+  return (
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-5">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="ui-surface-card ui-card-shadow inline-flex h-9 items-center justify-center gap-2 rounded-full border px-3 sm:h-11 sm:gap-2.5 sm:px-5">
+          <span
+            aria-hidden="true"
+            className="size-2 shrink-0 rounded-full bg-emerald-500 animate-status-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+          />
+          <span className="hidden text-sm font-medium tracking-tight text-[var(--text-primary)] sm:inline sm:text-base">
+            Open to work
+          </span>
+        </div>
+        <ThemeToggle />
+      </div>
+
+      <div className="text-center">
+        <p className="font-logo text-[clamp(1.75rem,4vw,3.125rem)] leading-none tracking-[0.02em] text-[var(--text-primary)]">
+          AKD
+        </p>
+      </div>
+
+      <div className="text-right">
+        <p
+          suppressHydrationWarning
+          className="text-xs tracking-tight text-[var(--text-muted)] sm:text-base lg:text-[clamp(1rem,1.6vw,1.5625rem)]"
+        >
+          {timeLabel}
+        </p>
+        <p className="text-sm font-semibold tracking-tight text-[var(--text-primary)] sm:text-lg md:text-xl lg:text-[clamp(1rem,1.6vw,1.5625rem)]">
+          Vancouver, BC
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Card({
+  className,
+  children,
+  as: Component = "div",
+  ...props
+}: {
+  className?: string;
+  children: React.ReactNode;
+  as?: React.ElementType;
+  [key: string]: any;
+}) {
+  return (
+    <Component
+      className={`ui-surface-card ui-card-shadow rounded-[18px] border p-4 sm:rounded-[20px] sm:p-5 md:p-4 ${
         className ?? ""
       }`}
+      {...props}
     >
       {children}
-    </motion.div>
+    </Component>
   );
 }
 
 export default function HeroSection() {
-  const lenis = useLenis();
-  const localTime = useVancouverTime();
+  const [timeLabel, setTimeLabel] = useState(getVancouverTime);
+  // #region agent log
+  const box2Ref = useRef<HTMLDivElement>(null);
+  const box5Ref = useRef<HTMLDivElement>(null);
+  const outerGridRef = useRef<HTMLDivElement>(null);
+  // #endregion
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setTimeLabel(getVancouverTime());
+    }, 30_000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  // #region agent log
+  useEffect(() => {
+    const measure = () => {
+      const vw = window.innerWidth;
+      const box2 = box2Ref.current?.getBoundingClientRect();
+      const box5 = box5Ref.current?.getBoundingClientRect();
+      const lgActive = window.matchMedia("(min-width: 1024px)").matches;
+      const xlActive = window.matchMedia("(min-width: 1280px)").matches;
+      const gridCols = outerGridRef.current
+        ? window.getComputedStyle(outerGridRef.current).gridTemplateColumns
+        : null;
+      console.log(
+        "[DEBUG 4d97a2]",
+        JSON.stringify({
+          viewportWidth: vw,
+          lgActive,
+          xlActive,
+          gridCols,
+          box2: {
+            w: Math.round(box2?.width ?? 0),
+            h: Math.round(box2?.height ?? 0),
+          },
+          box5: {
+            w: Math.round(box5?.width ?? 0),
+            h: Math.round(box5?.height ?? 0),
+          },
+        }),
+      );
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+  // #endregion
 
   return (
     <section
       id="about"
-      className="relative flex min-h-dvh items-center justify-center bg-transparent px-4 py-4 sm:px-6 sm:py-6 lg:px-8"
+      className="ui-surface-page bg-dot-pattern relative isolate min-h-dvh overflow-x-clip text-[var(--text-primary)]"
+      aria-label="Hero"
     >
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="mx-auto grid w-full max-w-[1320px] grid-cols-1 gap-3 sm:gap-4 lg:h-[min(920px,calc(100dvh-2.5rem))] lg:grid-cols-12 lg:grid-rows-10 lg:gap-4"
-      >
-        <HeroCard className="p-5 sm:p-6 lg:col-span-5 lg:row-span-2 lg:p-6">
-          <div className="grid h-full place-items-center">
-            <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center">
-              <div className="flex h-full items-center justify-center">
-                <Link
-                  href="/"
-                  className="font-plaster text-logo-gradient text-[2.5rem] leading-none sm:text-[3.5rem] lg:text-[3.75rem]"
-                >
-                  AKD
-                </Link>
+      <div className="mx-auto grid min-h-dvh w-full max-w-[1280px] grid-rows-[auto_1fr] px-4 pb-4 pt-2 sm:px-6 sm:pb-5 sm:pt-3 md:px-10 md:pb-6 md:pt-4 xl:px-[52px]">
+        <div className="sticky top-0 z-30 py-2 sm:py-3 md:py-4 [background-color:var(--surface-page)]">
+          <HeroTopBar timeLabel={timeLabel} />
+        </div>
+
+        <div className="grid min-h-0 place-items-center py-3 sm:py-4 md:py-5">
+          <div
+            ref={outerGridRef}
+            className="grid w-full gap-[clamp(5px,0.8vw,10px)] md:grid-cols-[minmax(0,2fr)_minmax(14rem,1fr)] md:grid-rows-[1fr_1fr] xl:grid-cols-[minmax(0,1fr)_24.125rem]"
+          >
+            {/* Box 1 – Intro (row 1, col 1) */}
+            <Card className="md:rounded-none md:rounded-tl-[20px] md:h-[clamp(180px,33vh,301px)] xl:p-[clamp(12px,1.5vw,20px)]">
+              <div className="grid h-full items-center gap-4 sm:gap-6 md:grid-cols-[minmax(10rem,clamp(10rem,18vw,15.875rem))_minmax(0,1fr)] md:gap-[clamp(1rem,2vw,1.75rem)] xl:gap-[clamp(1.5rem,2.5vw,2.25rem)]">
+                <div className="relative mx-auto aspect-square w-full max-w-[clamp(10rem,18vw,15.875rem)] overflow-hidden rounded-[16px] bg-[var(--surface-inset)] md:mx-0">
+                  <Image
+                    src="/assets/image/arnold.png"
+                    alt="Arnold Kevin Desouza portrait"
+                    fill
+                    sizes="(max-width: 768px) 80vw, 254px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+
+                <div className="min-w-0 md:max-w-[29rem]">
+                  <p className="text-sm leading-tight text-[var(--text-subtle)] sm:text-base md:text-[clamp(0.875rem,1.4vw,1.25rem)]">
+                    Hello, I&apos;m
+                  </p>
+                  <h1 className="mt-1 text-2xl font-semibold leading-[1.05] tracking-tight [text-wrap:balance] sm:text-3xl md:text-[clamp(1.25rem,2.2vw,1.875rem)]">
+                    Arnold Kevin Desouza
+                  </h1>
+                  <p className="mt-[clamp(1.5rem,3vw,2.5rem)] max-w-[29rem] text-sm leading-snug text-[var(--text-primary)] [text-wrap:pretty] sm:text-base md:text-[clamp(0.875rem,1.4vw,1.25rem)] md:leading-[1.28]">
+                    I turn complex datasets into decision-ready systems:
+                    resilient pipelines, useful dashboards, and automation that
+                    won&apos;t become next quarter&apos;s cleanup job.
+                  </p>
+                </div>
               </div>
-              <span
-                className="h-8 w-px bg-white/20 sm:h-10 lg:h-12"
-                aria-hidden="true"
-              />
-              <div className="flex h-full items-center justify-center">
-                <span className="text-[1.35rem] font-normal uppercase tracking-[0.08em] text-[#C1C9FF] sm:text-[1.25rem] lg:text-[1.5rem]">
-                  Portfolio
-                </span>
+            </Card>
+
+            {/* Box 4 – Social links (row 1, col 2) */}
+            <Card className="flex flex-col justify-center md:rounded-none md:rounded-tr-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2.5vw,33px)]">
+              <div className="flex w-full flex-col gap-1 sm:gap-1">
+                {SOCIAL_LINKS.map(({ href, label, icon, external }, index) => {
+                  let radiusClass = "";
+                  if (index === 0) {
+                    radiusClass = "rounded-t-[20px]";
+                  } else if (index === SOCIAL_LINKS.length - 1) {
+                    radiusClass = "rounded-b-[20px]";
+                  }
+
+                  return (
+                    <a
+                      key={label}
+                      href={href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noreferrer noopener" : undefined}
+                      className={`ui-surface-inset group relative block w-full cursor-pointer overflow-hidden transition-all duration-300 hover:z-10 hover:-translate-y-[2px] hover:bg-[var(--surface-page)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:ring-1 hover:ring-[var(--border-subtle)] dark:hover:shadow-[0_4px_12px_rgba(255,255,255,0.02)] ${radiusClass}`}
+                      aria-label={label}
+                    >
+                      <div className="relative z-10 flex w-full items-center justify-between px-5 py-3 sm:px-6 sm:py-3.5 transition-opacity duration-300 group-hover:opacity-0">
+                        <div className="flex items-center gap-4 sm:gap-5">
+                          <div className="flex size-[20px] shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 sm:size-[24px]">
+                            <ThemeSvgAsset
+                              icon={icon}
+                              className="size-full object-contain opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+                            />
+                          </div>
+                          <span className="text-[14px] font-medium tracking-tight text-[var(--text-primary)] sm:text-[15px] xl:text-[16px]">
+                            {label}
+                          </span>
+                        </div>
+                        <ArrowRight className="mr-1 size-4 text-[var(--text-subtle)] opacity-0 -translate-x-2 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[var(--text-primary)]" />
+                      </div>
+
+                      {/* Google-Style Hover Overlay */}
+                      <div className="absolute inset-0 z-20 flex bg-[var(--text-primary)] text-[var(--surface-page)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <div className="flex shrink-0 items-center bg-[var(--text-primary)] pl-5 pr-2 sm:pl-6 sm:pr-4 z-10 h-full">
+                          <ArrowUpRight className="size-4 sm:size-5" />
+                        </div>
+                        <div className="flex-1 flex items-center h-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                          <div className="animate-marquee-ltr flex w-max gap-4 font-display text-lg tracking-widest text-[var(--surface-page)] pt-0.5">
+                            {Array.from({ length: 12 }).map((_, i) => (
+                              <span
+                                key={i}
+                                className="whitespace-nowrap uppercase"
+                              >
+                                {label}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  );
+                })}
               </div>
-            </div>
-          </div>
-        </HeroCard>
+            </Card>
 
-        <HeroCard className="p-5 sm:p-6 lg:col-span-3 lg:row-span-2 lg:p-6">
-          <div className="grid h-full content-center gap-4">
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-                Local Time
-              </p>
-              <p className="mt-1 font-editorial text-3xl leading-none font-light text-white sm:text-[2.15rem]">
-                {localTime || "—:—"}
-              </p>
-            </div>
-
-            <div className="grid gap-1">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-                Based In
-              </p>
-              <p className="text-sm font-medium text-white/90">Vancouver, BC</p>
-            </div>
-          </div>
-        </HeroCard>
-
-        <HeroCard className="p-4 sm:p-5 lg:col-span-4 lg:row-span-2 lg:p-5">
-          <div className="grid h-full grid-rows-[auto_1fr] gap-4">
-            <h3 className="font-editorial text-2xl leading-none font-light text-white">
-              Socials
-            </h3>
-
-            <div className="grid h-full min-h-[84px] items-center">
-              <div className="grid h-full min-h-[72px] grid-cols-4 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
-                <a
-                  href={LINKS.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="LinkedIn"
-                  className="grid place-items-center text-white/80 transition hover:bg-white/[0.06] hover:text-white"
-                >
-                  <Linkedin size={30} strokeWidth={2} />
-                </a>
-                <a
-                  href={LINKS.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="GitHub"
-                  className="grid place-items-center border-l border-white/10 text-white/80 transition hover:bg-white/[0.06] hover:text-white"
-                >
-                  <Github size={30} strokeWidth={2} />
-                </a>
-                <a
-                  href="/resume"
-                  aria-label="Resume"
-                  className="grid place-items-center border-l border-white/10 text-white/80 transition hover:bg-white/[0.06] hover:text-white"
-                >
-                  <Briefcase size={30} strokeWidth={2} />
-                </a>
-                <a
-                  href={`mailto:${LINKS.email}`}
-                  aria-label="Email"
-                  className="grid place-items-center border-l border-white/10 text-white/80 transition hover:bg-white/[0.06] hover:text-white"
-                >
-                  <Mail size={30} strokeWidth={2} />
-                </a>
-              </div>
-            </div>
-          </div>
-        </HeroCard>
-
-        <HeroCard className="relative overflow-hidden p-3 lg:col-span-3 lg:row-span-4">
-          <div className="relative h-full w-full overflow-hidden rounded-xl">
-            <Image
-              src="/assets/image/arnold.png"
-              alt="Arnold Kevin Desouza"
-              fill
-              priority
-              className="object-cover object-center transition-transform duration-1000 hover:scale-[1.02]"
-            />
-          </div>
-        </HeroCard>
-
-        <HeroCard className="relative min-h-0 overflow-hidden p-5 sm:p-6 lg:col-span-6 lg:row-span-4 lg:p-6">
-          <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/[0.04] blur-[70px]" />
-
-          <div className="relative z-10 flex h-full min-h-0 flex-col justify-between gap-4">
-            <div>
-              <p className="text-[clamp(1.05rem,1.35vw,1.45rem)] leading-none text-white/95">
-                Hi, I&apos;m
-              </p>
-              <h1 className="mt-3 font-editorial text-[clamp(1.15rem,4vw,3.1rem)] leading-none tracking-[-0.03em] whitespace-nowrap text-white">
-                Arnold Kevin Desouza
-              </h1>
-              <p className="mt-5 max-w-[46ch] text-[clamp(1.02rem,1.25vw,1.4rem)] leading-[1.42] text-white/82">
-                I turn complex datasets into decision-ready systems: resilient
-                pipelines, useful dashboards, and automation that won&apos;t
-                become next quarter&apos;s cleanup job.
-              </p>
-            </div>
-
-            <p className="text-[clamp(0.95rem,1.15vw,1.35rem)] leading-tight tracking-tight text-white/95">
-              <span className="font-semibold">Python</span>
-              <span className="mx-2 text-white/55 sm:mx-3">•</span>
-              <span className="font-semibold">SQL</span>
-              <span className="mx-2 text-white/55 sm:mx-3">•</span>
-              <span className="font-semibold uppercase">Tableau</span>
-              <span className="mx-2 text-white/55 sm:mx-3">•</span>
-              <span className="font-semibold">Power BI</span>
-            </p>
-          </div>
-        </HeroCard>
-
-        <HeroCard className="min-h-0 p-4 sm:p-5 lg:col-span-3 lg:row-span-4 lg:p-5">
-          <div className="grid h-full min-h-0 grid-rows-[auto_1fr] gap-4">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#C1C9FF]/70">
-                Tech Arsenal
-              </p>
-              <h3 className="mt-1 text-2xl font-semibold leading-none text-white sm:text-3xl">
-                Stack I Use
-              </h3>
-            </div>
-
-            <div className="grid h-full min-h-0 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
-              <div className="grid h-full min-h-0 grid-cols-3 grid-rows-2">
-                {[
-                  { label: "SQL", icon: Database },
-                  { label: "Python", icon: Code2 },
-                  { label: "ETL", icon: Workflow },
-                  { label: "BI", icon: BarChart3 },
-                  { label: "DBT", icon: Sparkles },
-                  { label: "Maps", icon: MapPin },
-                ].map(({ label, icon: Icon }) => (
-                  <div
-                    key={label}
-                    className="flex min-h-0 flex-col items-center justify-center gap-2 border-white/10 px-2 py-3 text-white/85 [border-right:1px_solid_rgba(255,255,255,0.08)] [border-bottom:1px_solid_rgba(255,255,255,0.08)] [&:nth-child(3n)]:[border-right:none] [&:nth-last-child(-n+3)]:[border-bottom:none]"
-                  >
-                    <Icon size={34} strokeWidth={2} />
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/80">
-                      {label}
-                    </span>
+            {/* Box 2-3 – Projects & Contact (row 2, col 1) */}
+            {/* #region agent log */}
+            <div
+              ref={box2Ref}
+              className="grid gap-[clamp(5px,0.8vw,10px)] md:grid-cols-2"
+            >
+              {/* #endregion */}
+              <Card
+                as="a"
+                href="#projects"
+                className="group relative block cursor-pointer overflow-hidden md:rounded-none md:rounded-bl-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]"
+              >
+                <div className="flex h-full flex-col relative z-10 transition-opacity duration-300 group-hover:opacity-0">
+                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
+                    Projects
+                  </h2>
+                  <p className="mt-[clamp(1rem,1.5vw,2rem)] max-w-[28ch] text-base leading-snug text-[var(--text-primary)] [text-wrap:pretty] sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)] md:leading-[1.28]">
+                    Resume-backed case studies in{" "}
+                    <strong>pipelines</strong>, <strong>analytics</strong>, and{" "}
+                    <strong>operational reporting</strong>.
+                  </p>
+                  <div className="mt-auto inline-flex w-fit items-center gap-1 text-base font-medium underline underline-offset-4 transition sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)]">
+                    See projects{" "}
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </div>
-                ))}
-              </div>
+                </div>
+
+                {/* Hover overlay */}
+                <div className="absolute inset-0 z-20 flex flex-col justify-between bg-[var(--text-primary)] text-[var(--surface-page)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="p-4 sm:p-5 xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+                    <ArrowUpRight className="size-6 sm:size-8" />
+                  </div>
+                  <div className="flex items-center overflow-hidden pb-4 sm:pb-5 xl:pb-[clamp(14px,1.8vw,24px)] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                    <div className="animate-marquee-ltr flex w-max gap-6 px-4 font-display text-4xl sm:text-5xl uppercase tracking-widest text-[var(--surface-page)]">
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <span key={i}>PROJECTS</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              <Card
+                as="a"
+                href="#contact"
+                className="group relative block cursor-pointer overflow-hidden md:rounded-none md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]"
+              >
+                <div className="flex h-full flex-col relative z-10 transition-opacity duration-300 group-hover:opacity-0">
+                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
+                    Contact
+                  </h2>
+                  <p className="mt-[clamp(1rem,1.5vw,2rem)] max-w-[28ch] text-base leading-snug text-[var(--text-primary)] [text-wrap:pretty] sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)] md:leading-[1.28]">
+                    Based in <strong>Vancouver, BC</strong>. Open to{" "}
+                    <strong>data engineering</strong>,{" "}
+                    <strong>analytics</strong>, and automation work.
+                  </p>
+                  <div className="mt-auto inline-flex w-fit items-center gap-1 text-base font-medium underline underline-offset-4 transition sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)]">
+                    Start a conversation{" "}
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                  </div>
+                </div>
+
+                {/* Hover overlay */}
+                <div className="absolute inset-0 z-20 flex flex-col justify-between bg-[var(--text-primary)] text-[var(--surface-page)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="p-4 sm:p-5 xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+                    <ArrowUpRight className="size-6 sm:size-8" />
+                  </div>
+                  <div className="flex items-center overflow-hidden pb-4 sm:pb-5 xl:pb-[clamp(14px,1.8vw,24px)] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                    <div className="animate-marquee-ltr flex w-max gap-6 px-4 font-display text-4xl sm:text-5xl uppercase tracking-widest text-[var(--surface-page)]">
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <span key={i}>CONTACT</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Card>
             </div>
+
+            {/* Box 5 – Tech stack (row 2, col 2) */}
+            {/* #region agent log */}
+            <div ref={box5Ref} className="h-full">
+              {/* #endregion */}
+              <Card className="md:rounded-none md:rounded-br-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+                <div className="flex h-full flex-col">
+                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
+                    Core Stack
+                  </h2>
+                  <div className="mt-[clamp(1rem,1.5vw,2rem)] grid w-full grid-cols-2 gap-[2px]">
+                    {STACK_ITEMS.map(({ label, icon }, index) => {
+                      let radiusClass = "";
+                      if (index === 0) {
+                        radiusClass = "rounded-tl-[20px]";
+                      } else if (index === 1) {
+                        radiusClass = "rounded-tr-[20px]";
+                      } else if (index === STACK_ITEMS.length - 2) {
+                        radiusClass = "rounded-bl-[20px]";
+                      } else if (index === STACK_ITEMS.length - 1) {
+                        radiusClass = "rounded-br-[20px]";
+                      }
+
+                      return (
+                        <div
+                          key={label}
+                          className={`ui-surface-inset flex cursor-default items-center gap-2.5 sm:gap-3 px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-[var(--surface-page)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:ring-1 hover:ring-[var(--border-subtle)] dark:hover:shadow-[0_2px_8px_rgba(255,255,255,0.03)] transition-all duration-300 hover:scale-[1.02] hover:z-10 ${radiusClass}`}
+                        >
+                          <div className="flex size-[1.1rem] shrink-0 items-center justify-center sm:size-[1.2rem]">
+                            <ThemeSvgAsset
+                              icon={icon}
+                              className="size-full object-contain opacity-85"
+                            />
+                          </div>
+                          <span className="min-w-0 truncate text-[13px] font-medium tracking-wide text-[var(--text-primary)] sm:text-[14px]">
+                            {label}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Card>
+              {/* #region agent log */}
+            </div>
+            {/* #endregion */}
           </div>
-        </HeroCard>
-
-        <HeroCard className="relative overflow-hidden p-5 sm:p-6 lg:col-span-7 lg:row-span-4 lg:p-6">
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-white/[0.03] to-transparent" />
-          <div className="relative z-10 flex h-full flex-col justify-between gap-5">
-            <div>
-              <p className="text-[clamp(0.95rem,1vw,1.1rem)] leading-none text-white/95">
-                Currently
-              </p>
-              <h3 className="mt-3 font-editorial text-[clamp(1.4rem,2.1vw,2.3rem)] leading-[1.02] tracking-tight text-white">
-                Building better reporting systems and cleaner analytics
-                handoffs.
-              </h3>
-              <p className="mt-4 text-[clamp(1.02rem,1.25vw,1.4rem)] leading-[1.45] text-white/78">
-                I focus on repeatable workflows, performance-minded
-                transformations, and dashboards that reduce back-and-forth
-                instead of creating more of it.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={() => scrollToTarget("projects", lenis as any, 80)}
-                data-text="Selected Work"
-                className="hero-cta h-11 cursor-pointer rounded-xl bg-white px-5 text-brand-bg"
-              >
-                <span className="hero-cta-label">Selected Work</span>
-              </button>
-              <Link
-                href="/resume"
-                data-text="Resume"
-                className="hero-cta hero-cta-secondary h-11 rounded-xl px-4 text-white"
-              >
-                <span className="hero-cta-label">Resume</span>
-              </Link>
-            </div>
-          </div>
-        </HeroCard>
-
-        <HeroCard className="p-5 sm:p-6 lg:col-span-5 lg:row-span-4 lg:p-6">
-          <div className="flex h-full flex-col justify-between gap-6">
-            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-white/45">
-              <Mail size={14} />
-              <span>Let&apos;s Work Together</span>
-            </div>
-
-            <div>
-              <h3 className="font-editorial text-[clamp(1.4rem,2.1vw,2.3rem)] leading-[1.02] tracking-tight font-light text-white">
-                Open to full-time and contract roles.
-              </h3>
-              <p className="mt-3 text-[clamp(1.02rem,1.25vw,1.4rem)] leading-[1.45] text-white/60">
-                If you need cleaner analytics, reliable pipelines, or fewer
-                spreadsheet emergencies, I&apos;m interested.
-              </p>
-            </div>
-
-            <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-center">
-              <a
-                href={`mailto:${LINKS.email}`}
-                className="truncate rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/85 transition hover:bg-white/[0.06]"
-              >
-                {LINKS.email}
-              </a>
-              <button
-                type="button"
-                onClick={() => scrollToTarget("contact", lenis as any, 80)}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.03] px-4 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-white/[0.06] active:scale-95"
-              >
-                Contact <ArrowRight size={14} />
-              </button>
-            </div>
-          </div>
-        </HeroCard>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }
