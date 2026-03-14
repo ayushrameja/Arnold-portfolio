@@ -11,7 +11,7 @@ Live site: https://www.arnolddesouza.dev
 
 ## Local setup
 ```bash
-pnpm install
+pnpm i
 pnpm dev
 ```
 
