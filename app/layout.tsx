@@ -53,6 +53,17 @@ export default function RootLayout({
             }
           })();`}
         </Script>
+        <Script id="scroll-init" strategy="beforeInteractive">
+          {`(() => {
+            const resetScroll = () => window.scrollTo(0, 0);
+            if ("scrollRestoration" in window.history) {
+              window.history.scrollRestoration = "manual";
+            }
+            window.addEventListener("load", resetScroll, { once: true });
+            window.addEventListener("pageshow", resetScroll);
+            resetScroll();
+          })();`}
+        </Script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

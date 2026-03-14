@@ -3,9 +3,39 @@
 import Image from "next/image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 import ThemeToggle from "@/components/ThemeToggle";
 import { LINKS } from "@/constants/links";
+import { usePageTransition } from "@/components/PageTransitionProvider";
+
+/* ── Stagger animation variants ── */
+const heroContainerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.12, delayChildren: 0.15 },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.55,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+};
+
+const topBarVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.45, ease: "easeOut" },
+  },
+};
 
 type SocialLink = {
   href: string;
@@ -169,6 +199,7 @@ function Card({
 
 export default function HeroSection() {
   const [timeLabel, setTimeLabel] = useState(getVancouverTime);
+  const { navigateWithTransition } = usePageTransition();
   // #region agent log
   const box2Ref = useRef<HTMLDivElement>(null);
   const box5Ref = useRef<HTMLDivElement>(null);
@@ -225,19 +256,28 @@ export default function HeroSection() {
       aria-label="Hero"
     >
       <div className="mx-auto grid min-h-dvh w-full max-w-[1280px] grid-rows-[auto_1fr] px-4 pb-4 pt-2 sm:px-6 sm:pb-5 sm:pt-3 md:px-10 md:pb-6 md:pt-4 xl:px-[52px]">
-        <div className="sticky top-0 z-30 py-2 sm:py-3 md:py-4 [background-color:var(--surface-page)]">
+        <motion.div
+          className="sticky top-0 z-30 py-2 sm:py-3 md:py-4 [background-color:var(--surface-page)]"
+          variants={topBarVariants}
+          initial="hidden"
+          animate="visible"
+        >
           <HeroTopBar timeLabel={timeLabel} />
-        </div>
+        </motion.div>
 
         <div className="grid min-h-0 place-items-center py-3 sm:py-4 md:py-5">
-          <div
+          <motion.div
             ref={outerGridRef}
             className="grid w-full gap-[clamp(5px,0.8vw,10px)] md:grid-cols-[minmax(0,2fr)_minmax(14rem,1fr)] md:grid-rows-[1fr_1fr] xl:grid-cols-[minmax(0,1fr)_24.125rem]"
+            variants={heroContainerVariants}
+            initial="hidden"
+            animate="visible"
           >
             {/* Box 1 – Intro (row 1, col 1) */}
+            <motion.div variants={cardVariants}>
             <Card className="md:rounded-none md:rounded-tl-[20px] md:h-[clamp(180px,33vh,301px)] xl:p-[clamp(12px,1.5vw,20px)]">
               <div className="grid h-full items-center gap-4 sm:gap-6 md:grid-cols-[minmax(10rem,clamp(10rem,18vw,15.875rem))_minmax(0,1fr)] md:gap-[clamp(1rem,2vw,1.75rem)] xl:gap-[clamp(1.5rem,2.5vw,2.25rem)]">
-                <div className="relative mx-auto aspect-square w-full max-w-[clamp(10rem,18vw,15.875rem)] overflow-hidden rounded-[16px] bg-[var(--surface-inset)] md:mx-0">
+                <div className="relative mx-auto aspect-square w-full md:max-w-[clamp(10rem,18vw,15.875rem)] max-h-full overflow-hidden rounded-[16px] bg-[var(--surface-inset)] md:mx-0">
                   <Image
                     src="/assets/image/arnold.png"
                     alt="Arnold Kevin Desouza portrait"
@@ -263,8 +303,10 @@ export default function HeroSection() {
                 </div>
               </div>
             </Card>
+            </motion.div>
 
             {/* Box 4 – Social links (row 1, col 2) */}
+            <motion.div variants={cardVariants}>
             <Card className="flex flex-col justify-center md:rounded-none md:rounded-tr-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2.5vw,33px)]">
               <div className="flex w-full flex-col gap-1 sm:gap-1">
                 {SOCIAL_LINKS.map(({ href, label, icon, external }, index) => {
@@ -322,8 +364,10 @@ export default function HeroSection() {
                 })}
               </div>
             </Card>
+            </motion.div>
 
             {/* Box 2-3 – Projects & Contact (row 2, col 1) */}
+            <motion.div variants={cardVariants}>
             {/* #region agent log */}
             <div
               ref={box2Ref}
@@ -400,53 +444,59 @@ export default function HeroSection() {
                 </div>
               </Card>
             </div>
+            </motion.div>
 
             {/* Box 5 – Tech stack (row 2, col 2) */}
+            <motion.div variants={cardVariants}>
             {/* #region agent log */}
             <div ref={box5Ref} className="h-full">
               {/* #endregion */}
-              <Card className="md:rounded-none md:rounded-br-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
-                <div className="flex h-full flex-col">
-                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)]">
-                    Core Stack
-                  </h2>
-                  <div className="mt-[clamp(1rem,1.5vw,2rem)] grid w-full grid-cols-2 gap-[2px]">
-                    {STACK_ITEMS.map(({ label, icon }, index) => {
-                      let radiusClass = "";
-                      if (index === 0) {
-                        radiusClass = "rounded-tl-[20px]";
-                      } else if (index === 1) {
-                        radiusClass = "rounded-tr-[20px]";
-                      } else if (index === STACK_ITEMS.length - 2) {
-                        radiusClass = "rounded-bl-[20px]";
-                      } else if (index === STACK_ITEMS.length - 1) {
-                        radiusClass = "rounded-br-[20px]";
-                      }
+              <Card
+                as="button"
+                onClick={() => navigateWithTransition("/resume")}
+                className="group relative block cursor-pointer overflow-hidden md:rounded-none md:rounded-br-[20px] md:h-[clamp(180px,33vh,301px)] xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)] w-full text-left"
+              >
+                {/* Ambient glow in base state */}
+                <div className="absolute -right-10 -top-10 z-0 size-48 rounded-full bg-purple-500/20 blur-3xl transition-opacity duration-300 group-hover:opacity-0" aria-hidden="true" />
+                <div className="absolute -bottom-10 -left-10 z-0 size-48 rounded-full bg-indigo-500/20 blur-3xl transition-opacity duration-300 group-hover:opacity-0" aria-hidden="true" />
 
-                      return (
-                        <div
-                          key={label}
-                          className={`ui-surface-inset flex cursor-default items-center gap-2.5 sm:gap-3 px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-[var(--surface-page)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:ring-1 hover:ring-[var(--border-subtle)] dark:hover:shadow-[0_2px_8px_rgba(255,255,255,0.03)] transition-all duration-300 hover:scale-[1.02] hover:z-10 ${radiusClass}`}
-                        >
-                          <div className="flex size-[1.1rem] shrink-0 items-center justify-center sm:size-[1.2rem]">
-                            <ThemeSvgAsset
-                              icon={icon}
-                              className="size-full object-contain opacity-85"
-                            />
-                          </div>
-                          <span className="min-w-0 truncate text-[13px] font-medium tracking-wide text-[var(--text-primary)] sm:text-[14px]">
-                            {label}
-                          </span>
-                        </div>
-                      );
-                    })}
+                <div className="flex h-full flex-col relative z-10 transition-opacity duration-300 group-hover:opacity-0">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[clamp(1rem,1.6vw,1.4rem)] bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400">
+                      Resume
+                    </h2>
+                    <span className="relative flex size-3">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75"></span>
+                      <span className="relative inline-flex size-3 rounded-full bg-indigo-500"></span>
+                    </span>
+                  </div>
+                  <p className="mt-[clamp(1rem,1.5vw,2rem)] max-w-[28ch] text-base leading-snug text-[var(--text-primary)] [text-wrap:pretty] sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)] md:leading-[1.28]">
+                    A structured overview of my work history, skills, and technical experience.
+                  </p>
+                  <div className="mt-auto inline-flex w-fit items-center gap-1 text-base font-medium underline underline-offset-4 transition sm:text-lg md:text-[clamp(0.875rem,1.4vw,1.25rem)] text-indigo-500 dark:text-indigo-400">
+                    View resume <ArrowRight className="size-4" aria-hidden="true" />
+                  </div>
+                </div>
+
+                {/* Hover overlay - Vibrant Gradient */}
+                <div className="absolute inset-0 z-20 flex flex-col justify-between bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="p-4 sm:p-5 xl:px-[clamp(16px,2vw,29px)] xl:py-[clamp(14px,1.8vw,24px)]">
+                    <ArrowUpRight className="size-6 sm:size-8" />
+                  </div>
+                  <div className="flex items-center overflow-hidden pb-4 sm:pb-5 xl:pb-[clamp(14px,1.8vw,24px)] [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]">
+                    <div className="animate-marquee-ltr flex w-max gap-6 px-4 font-display text-4xl sm:text-5xl uppercase tracking-widest text-white">
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <span key={i}>RESUME</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </Card>
               {/* #region agent log */}
             </div>
+            </motion.div>
             {/* #endregion */}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
