@@ -43,8 +43,10 @@ export default function ThemeToggle() {
   const [theme, setTheme] = useState<ThemeMode | null>(null);
 
   useEffect(() => {
-    // Read the actual theme only on the client after mount
-    setTheme(readThemeFromDom());
+    const frame = window.requestAnimationFrame(() => {
+      // Read the actual theme only on the client after mount
+      setTheme(readThemeFromDom());
+    });
 
     const root = document.documentElement;
     const observer = new MutationObserver(() => {
@@ -56,7 +58,10 @@ export default function ThemeToggle() {
       attributeFilter: ["data-theme"],
     });
 
-    return () => observer.disconnect();
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, []);
 
   const isDark = theme === "dark";

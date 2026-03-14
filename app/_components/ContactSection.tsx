@@ -9,7 +9,6 @@ import {
   MapPin,
   Phone,
   Send,
-  Sparkles,
   CheckCircle2,
 } from "lucide-react";
 
@@ -85,10 +84,9 @@ export default function ContactSection() {
     >
       <div className="mx-auto max-w-[1280px]">
         <div className="grid gap-[clamp(5px,0.8vw,10px)]">
-          <div className="grid gap-[clamp(5px,0.8vw,10px)] sm:grid-cols-2">
-            <div className="ui-surface-card ui-card-shadow rounded-[18px] border p-4 sm:rounded-[20px] sm:p-5 md:p-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[var(--surface-stroke)] px-3 py-1.5 text-xs font-medium tracking-[0.14em] uppercase text-[var(--text-muted)]">
-                <Sparkles className="size-3.5" aria-hidden="true" />
+          <div className="ui-surface-card ui-card-shadow rounded-[18px] border grid gap-8 sm:grid-cols-2 p-4 sm:gap-10 sm:rounded-[20px] sm:p-5 md:p-6 md:gap-12 lg:gap-16">
+            <div className="flex flex-col">
+              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--surface-stroke)] px-3 py-1.5 text-xs font-medium tracking-[0.14em] uppercase text-[var(--text-muted)]">
                 Contact
               </div>
 
@@ -132,7 +130,7 @@ export default function ContactSection() {
               </div>
             </div>
 
-            <div className="ui-surface-card ui-card-shadow rounded-[18px] border p-4 sm:rounded-[20px] sm:p-5 md:p-6">
+            <div className="flex flex-col justify-end mt-2 sm:mt-0">
               <p className="text-sm font-medium tracking-tight text-[var(--text-primary)]">
                 Reach out directly
               </p>

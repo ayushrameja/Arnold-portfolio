@@ -37,12 +37,12 @@ export default function ProjectsSection() {
               className="ui-surface-card ui-card-shadow rounded-[18px] border p-5 transition-all duration-300 hover:-translate-y-[1px] hover:ring-1 hover:ring-[var(--surface-stroke)] sm:rounded-[20px] sm:p-6 md:p-7 lg:p-8"
             >
               <div className="grid gap-6 sm:gap-7">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium tracking-tight text-[var(--text-muted)] sm:text-base">
                       {project.role} · {project.company}
                     </p>
-                    <h3 className="mt-2 text-2xl font-semibold leading-tight tracking-tight [text-wrap:balance] sm:text-[1.9rem] md:text-[2.05rem]">
+                    <h3 className="mt-2 text-2xl font-semibold leading-tight tracking-tight sm:text-[1.9rem] md:text-[2.05rem]">
                       {project.title.charAt(0).toUpperCase() + project.title.slice(1)}
                     </h3>
                   </div>
