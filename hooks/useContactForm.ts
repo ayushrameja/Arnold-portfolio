@@ -12,7 +12,6 @@ interface UseContactFormReturn {
   formState: FormState;
   isSubmitting: boolean;
   isSubmitted: boolean;
-  submittedName: string;
   updateField: (field: keyof FormState, value: string) => void;
   handleSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   reset: () => void;
@@ -57,7 +56,6 @@ export function useContactForm(): UseContactFormReturn {
   const [formState, setFormState] = useState<FormState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submittedName, setSubmittedName] = useState("");
 
   const updateField = (field: keyof FormState, value: string) => {
     setFormState((prev) => ({ ...prev, [field]: value }));
@@ -75,7 +73,6 @@ export function useContactForm(): UseContactFormReturn {
     setIsSubmitting(true);
 
     try {
-      const nextSubmittedName = formState.name;
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -89,9 +86,8 @@ export function useContactForm(): UseContactFormReturn {
       }
 
       setIsSubmitted(true);
-      setSubmittedName(nextSubmittedName);
       setFormState(initialState);
-      toast.success("Message sent. I'll get back to you soon.");
+      toast.success("Message sent. Arnold will get back to you soon.");
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Something went wrong";
       toast.error(errorMessage);
@@ -102,14 +98,12 @@ export function useContactForm(): UseContactFormReturn {
 
   const reset = () => {
     setIsSubmitted(false);
-    setSubmittedName("");
   };
 
   return {
     formState,
     isSubmitting,
     isSubmitted,
-    submittedName,
     updateField,
     handleSubmit,
     reset,

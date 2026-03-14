@@ -70,7 +70,6 @@ export default function ContactSection() {
     formState,
     isSubmitting,
     isSubmitted,
-    submittedName,
     updateField,
     handleSubmit,
     reset,
@@ -301,7 +300,7 @@ export default function ContactSection() {
                     Message sent
                   </p>
                   <h3 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
-                    Thanks{submittedName ? `, ${submittedName}` : ""}.
+                    Message sent to Arnold.
                   </h3>
                   <p className="mt-3 text-sm leading-snug text-[var(--text-subtle)] sm:text-base">
                     Arnold should receive your message shortly. If the internet
