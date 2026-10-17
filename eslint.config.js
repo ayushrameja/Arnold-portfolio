@@ -1,6 +1,7 @@
 import next from "eslint-config-next/core-web-vitals";
 
 const config = [
+  { ignores: [".open-next/**", ".wrangler/**"] },
   ...next,
   {
     rules: {
